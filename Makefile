@@ -71,7 +71,11 @@ pb.gen.rest: pb.deps.rest
 	rm -rf $(TMP_REPO_DIR)
 
 pb.deps.rest:
-	docker-compose run --rm app go get github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway@latest
-	docker-compose run --rm app go get github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2@latest
-	docker-compose run --rm app go get github.com/grpc-ecosystem/grpc-gateway/v2@latest
-	docker-compose run --rm app go mod tidy
+	@echo "📦 Installing gRPC Gateway dependencies..."
+	@docker-compose run --rm app sh -c "\
+		go get \
+			github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway@latest \
+			github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2@latest \
+			github.com/grpc-ecosystem/grpc-gateway/v2@latest \
+		&& go mod tidy" \
+	&& echo "✅ Dependencies installed successfully!"

@@ -22,7 +22,6 @@ import (
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/proto"
-	. "github.com/superplanehq/superplane/pkg/protos/delivery"
 )
 
 // Suppress "imported and not used" errors

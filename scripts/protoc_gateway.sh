@@ -13,7 +13,7 @@ fi
 
 INTERNAL_API_REPO=git@github.com:renderedtext/internal_api.git
 INTERNAL_API_OUT=pkg/protos
-GATEWAY_OUT=pkg/gateway
+GATEWAY_OUT=pkg/protos
 OPENAPI_OUT=api/swagger
 MODULE_NAME=github.com/superplanehq/superplane
 MODULES=(${1//,/ })
@@ -84,7 +84,7 @@ generate_gateway_files() {
          --openapiv2_out=$OPENAPI_OUT \
          --openapiv2_opt=logtostderr=true \
          $FILE
-
+         
   echo "Generated gRPC-Gateway files in $GATEWAY_OUT/$MODULE"
   echo "Generated OpenAPI specification in $OPENAPI_OUT"
 }
