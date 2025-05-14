@@ -8,6 +8,8 @@ package delivery
 
 import (
 	timestamp "github.com/golang/protobuf/ptypes/timestamp"
+	_ "github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2/options"
+	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -1849,8 +1851,9 @@ func (x *CreateStageResponse) GetStage() *Stage {
 type UpdateStageRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	Connections   []*Connection          `protobuf:"bytes,2,rep,name=connections,proto3" json:"connections,omitempty"`
-	RequesterId   string                 `protobuf:"bytes,3,opt,name=requester_id,json=requesterId,proto3" json:"requester_id,omitempty"`
+	CanvasId      string                 `protobuf:"bytes,2,opt,name=canvas_id,json=canvasId,proto3" json:"canvas_id,omitempty"` // Added for REST API path
+	Connections   []*Connection          `protobuf:"bytes,3,rep,name=connections,proto3" json:"connections,omitempty"`
+	RequesterId   string                 `protobuf:"bytes,4,opt,name=requester_id,json=requesterId,proto3" json:"requester_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1888,6 +1891,13 @@ func (*UpdateStageRequest) Descriptor() ([]byte, []int) {
 func (x *UpdateStageRequest) GetId() string {
 	if x != nil {
 		return x.Id
+	}
+	return ""
+}
+
+func (x *UpdateStageRequest) GetCanvasId() string {
+	if x != nil {
+		return x.CanvasId
 	}
 	return ""
 }
@@ -3542,7 +3552,7 @@ var File_delivery_proto protoreflect.FileDescriptor
 
 const file_delivery_proto_rawDesc = "" +
 	"\n" +
-	"\x0edelivery.proto\x12\x14InternalApi.Delivery\x1a\x1fgoogle/protobuf/timestamp.proto\"\xaf\x01\n" +
+	"\x0edelivery.proto\x12\x14InternalApi.Delivery\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1cgoogle/api/annotations.proto\x1a.protoc-gen-openapiv2/options/annotations.proto\"\xaf\x01\n" +
 	"\x06Canvas\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12'\n" +
@@ -3688,11 +3698,12 @@ const file_delivery_proto_rawDesc = "" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
 	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"H\n" +
 	"\x13CreateStageResponse\x121\n" +
-	"\x05stage\x18\x01 \x01(\v2\x1b.InternalApi.Delivery.StageR\x05stage\"\x8b\x01\n" +
+	"\x05stage\x18\x01 \x01(\v2\x1b.InternalApi.Delivery.StageR\x05stage\"\xa8\x01\n" +
 	"\x12UpdateStageRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\x12B\n" +
-	"\vconnections\x18\x02 \x03(\v2 .InternalApi.Delivery.ConnectionR\vconnections\x12!\n" +
-	"\frequester_id\x18\x03 \x01(\tR\vrequesterId\"H\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1b\n" +
+	"\tcanvas_id\x18\x02 \x01(\tR\bcanvasId\x12B\n" +
+	"\vconnections\x18\x03 \x03(\v2 .InternalApi.Delivery.ConnectionR\vconnections\x12!\n" +
+	"\frequester_id\x18\x04 \x01(\tR\vrequesterId\"H\n" +
 	"\x13UpdateStageResponse\x121\n" +
 	"\x05stage\x18\x01 \x01(\v2\x1b.InternalApi.Delivery.StageR\x05stage\"Y\n" +
 	"\x11ListStagesRequest\x12'\n" +
@@ -3812,22 +3823,37 @@ const file_delivery_proto_rawDesc = "" +
 	"\fexecution_id\x18\x02 \x01(\tR\vexecutionId\x12\x19\n" +
 	"\bstage_id\x18\x03 \x01(\tR\astageId\x12\x19\n" +
 	"\bevent_id\x18\x04 \x01(\tR\aeventId\x128\n" +
-	"\ttimestamp\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\ttimestamp2\x84\v\n" +
-	"\bDelivery\x12e\n" +
-	"\fCreateCanvas\x12).InternalApi.Delivery.CreateCanvasRequest\x1a*.InternalApi.Delivery.CreateCanvasResponse\x12t\n" +
-	"\x11CreateEventSource\x12..InternalApi.Delivery.CreateEventSourceRequest\x1a/.InternalApi.Delivery.CreateEventSourceResponse\x12b\n" +
-	"\vCreateStage\x12(.InternalApi.Delivery.CreateStageRequest\x1a).InternalApi.Delivery.CreateStageResponse\x12k\n" +
-	"\x0eDescribeCanvas\x12+.InternalApi.Delivery.DescribeCanvasRequest\x1a,.InternalApi.Delivery.DescribeCanvasResponse\x12h\n" +
-	"\rDescribeStage\x12*.InternalApi.Delivery.DescribeStageRequest\x1a+.InternalApi.Delivery.DescribeStageResponse\x12z\n" +
-	"\x13DescribeEventSource\x120.InternalApi.Delivery.DescribeEventSourceRequest\x1a1.InternalApi.Delivery.DescribeEventSourceResponse\x12_\n" +
+	"\ttimestamp\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\ttimestamp2\x98\x18\n" +
+	"\bDelivery\x12\xe0\x01\n" +
+	"\fCreateCanvas\x12).InternalApi.Delivery.CreateCanvasRequest\x1a*.InternalApi.Delivery.CreateCanvasResponse\"y\x92A[\n" +
+	"\x06Canvas\x12\x13Create a new canvas\x1a<Creates a new canvas with the given name and organization ID\x82\xd3\xe4\x93\x02\x15:\x01*\"\x10/api/v1/canvases\x12\x8c\x02\n" +
+	"\x11CreateEventSource\x12..InternalApi.Delivery.CreateEventSourceRequest\x1a/.InternalApi.Delivery.CreateEventSourceResponse\"\x95\x01\x92A]\n" +
+	"\vEventSource\x12\x19Create a new event source\x1a3Creates a new event source for the specified canvas\x82\xd3\xe4\x93\x02/:\x01*\"*/api/v1/canvases/{canvas_id}/event-sources\x12\xde\x01\n" +
+	"\vCreateStage\x12(.InternalApi.Delivery.CreateStageRequest\x1a).InternalApi.Delivery.CreateStageResponse\"z\x92AI\n" +
+	"\x05Stage\x12\x12Create a new stage\x1a,Creates a new stage for the specified canvas\x82\xd3\xe4\x93\x02(:\x01*\"#/api/v1/canvases/{canvas_id}/stages\x12\xd3\x01\n" +
+	"\x0eDescribeCanvas\x12+.InternalApi.Delivery.DescribeCanvasRequest\x1a,.InternalApi.Delivery.DescribeCanvasResponse\"f\x92AF\n" +
+	"\x06Canvas\x12\x12Get canvas details\x1a(Returns the details of a specific canvas\x82\xd3\xe4\x93\x02\x17\x12\x15/api/v1/canvases/{id}\x12\xe0\x01\n" +
+	"\rDescribeStage\x12*.InternalApi.Delivery.DescribeStageRequest\x1a+.InternalApi.Delivery.DescribeStageResponse\"v\x92AC\n" +
+	"\x05Stage\x12\x11Get stage details\x1a'Returns the details of a specific stage\x82\xd3\xe4\x93\x02*\x12(/api/v1/canvases/{canvas_id}/stages/{id}\x12\x8e\x02\n" +
+	"\x13DescribeEventSource\x120.InternalApi.Delivery.DescribeEventSourceRequest\x1a1.InternalApi.Delivery.DescribeEventSourceResponse\"\x91\x01\x92AW\n" +
+	"\vEventSource\x12\x18Get event source details\x1a.Returns the details of a specific event source\x82\xd3\xe4\x93\x021\x12//api/v1/canvases/{canvas_id}/event-sources/{id}\x12\xda\x01\n" +
 	"\n" +
-	"ListStages\x12'.InternalApi.Delivery.ListStagesRequest\x1a(.InternalApi.Delivery.ListStagesResponse\x12q\n" +
-	"\x10ListEventSources\x12-.InternalApi.Delivery.ListEventSourcesRequest\x1a..InternalApi.Delivery.ListEventSourcesResponse\x12n\n" +
-	"\x0fListStageEvents\x12,.InternalApi.Delivery.ListStageEventsRequest\x1a-.InternalApi.Delivery.ListStageEventsResponse\x12b\n" +
-	"\vUpdateStage\x12(.InternalApi.Delivery.UpdateStageRequest\x1a).InternalApi.Delivery.UpdateStageResponse\x12t\n" +
-	"\x11ApproveStageEvent\x12..InternalApi.Delivery.ApproveStageEventRequest\x1a/.InternalApi.Delivery.ApproveStageEventResponse\x12Y\n" +
-	"\bListTags\x12%.InternalApi.Delivery.ListTagsRequest\x1a&.InternalApi.Delivery.ListTagsResponse\x12k\n" +
-	"\x0eUpdateTagState\x12+.InternalApi.Delivery.UpdateTagStateRequest\x1a,.InternalApi.Delivery.UpdateTagStateResponseB8Z6github.com/superplanehq/superplane/pkg/protos/deliveryb\x06proto3"
+	"ListStages\x12'.InternalApi.Delivery.ListStagesRequest\x1a(.InternalApi.Delivery.ListStagesResponse\"y\x92AK\n" +
+	"\x05Stage\x12\vList stages\x1a5Returns a list of all stages for the specified canvas\x82\xd3\xe4\x93\x02%\x12#/api/v1/canvases/{canvas_id}/stages\x12\x88\x02\n" +
+	"\x10ListEventSources\x12-.InternalApi.Delivery.ListEventSourcesRequest\x1a..InternalApi.Delivery.ListEventSourcesResponse\"\x94\x01\x92A_\n" +
+	"\vEventSource\x12\x12List event sources\x1a<Returns a list of all event sources for the specified canvas\x82\xd3\xe4\x93\x02,\x12*/api/v1/canvases/{canvas_id}/event-sources\x12\xfd\x01\n" +
+	"\x0fListStageEvents\x12,.InternalApi.Delivery.ListStageEventsRequest\x1a-.InternalApi.Delivery.ListStageEventsResponse\"\x8c\x01\x92AL\n" +
+	"\x05Event\x12\x11List stage events\x1a0Returns a list of events for the specified stage\x82\xd3\xe4\x93\x027\x125/api/v1/canvases/{canvas_id}/stages/{stage_id}/events\x12\xce\x01\n" +
+	"\vUpdateStage\x12(.InternalApi.Delivery.UpdateStageRequest\x1a).InternalApi.Delivery.UpdateStageResponse\"j\x92A4\n" +
+	"\x05Stage\x12\x0eUpdate a stage\x1a\x1bUpdates the specified stage\x82\xd3\xe4\x93\x02-:\x01*2(/api/v1/canvases/{canvas_id}/stages/{id}\x12\x8f\x02\n" +
+	"\x11ApproveStageEvent\x12..InternalApi.Delivery.ApproveStageEventRequest\x1a/.InternalApi.Delivery.ApproveStageEventResponse\"\x98\x01\x92AB\n" +
+	"\x05Event\x12\x15Approve a stage event\x1a\"Approves the specified stage event\x82\xd3\xe4\x93\x02M:\x01*\"H/api/v1/canvases/{canvas_id}/stages/{stage_id}/events/{event_id}/approve\x12\xda\x01\n" +
+	"\bListTags\x12%.InternalApi.Delivery.ListTagsRequest\x1a&.InternalApi.Delivery.ListTagsResponse\"\x7f\x92AF\n" +
+	"\x03Tag\x12\tList tags\x1a4Returns a list of tags, optionally filtered by stage\x82\xd3\xe4\x93\x020Z \x12\x1e/api/v1/stages/{stage_id}/tags\x12\f/api/v1/tags\x12\xc6\x01\n" +
+	"\x0eUpdateTagState\x12+.InternalApi.Delivery.UpdateTagStateRequest\x1a,.InternalApi.Delivery.UpdateTagStateResponse\"Y\x92A?\n" +
+	"\x03Tag\x12\x10Update tag state\x1a&Updates the state of the specified tag\x82\xd3\xe4\x93\x02\x11:\x01*\x1a\f/api/v1/tagsB\xba\x01\x92A\x7f\x12U\n" +
+	"\fDelivery API\x12\x1cAPI for the Delivery service\"\"\n" +
+	"\vAPI Support\x1a\x13support@example.com2\x031.0*\x02\x01\x022\x10application/json:\x10application/jsonZ6github.com/superplanehq/superplane/pkg/protos/deliveryb\x06proto3"
 
 var (
 	file_delivery_proto_rawDescOnce sync.Once

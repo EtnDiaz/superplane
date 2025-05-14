@@ -61,4 +61,17 @@ pb.gen:
 	rm -rf $(TMP_REPO_DIR)
 	git clone git@github.com:renderedtext/internal_api.git $(TMP_REPO_DIR) && (cd $(TMP_REPO_DIR) && git checkout $(INTERNAL_API_BRANCH) && cd -)
 	docker-compose run --rm --no-deps app /app/scripts/protoc.sh $(INTERNAL_API_MODULES) $(INTERNAL_API_BRANCH) $(TMP_REPO_DIR)
+
+# Generate REST API and OpenAPI spec for Delivery service
+pb.gen.rest: pb.deps.rest
+	@echo "Generating gRPC-Gateway and OpenAPI files for Delivery service..."
 	rm -rf $(TMP_REPO_DIR)
+	git clone git@github.com:renderedtext/internal_api.git $(TMP_REPO_DIR) && (cd $(TMP_REPO_DIR) && git checkout $(INTERNAL_API_BRANCH) && cd -)
+	docker-compose run --rm --no-deps app /app/scripts/protoc_gateway.sh delivery $(INTERNAL_API_BRANCH) $(TMP_REPO_DIR)
+	rm -rf $(TMP_REPO_DIR)
+
+pb.deps.rest:
+	docker-compose run --rm app go get github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway@latest
+	docker-compose run --rm app go get github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2@latest
+	docker-compose run --rm app go get github.com/grpc-ecosystem/grpc-gateway/v2@latest
+	docker-compose run --rm app go mod tidy

@@ -2,7 +2,7 @@
 
 << 'DOCS'
   Generate gRPC-Gateway and OpenAPI specs from internal_api definitions.
-  This script assumes the proto file already contains HTTP annotations.
+  This script uses the existing HTTP annotations in the proto file.
 DOCS
 
 # When DEBUG env is set - print output of the scripts.
@@ -61,14 +61,6 @@ check_and_add_imports() {
     echo "Added OpenAPI annotations import"
   else
     echo "OpenAPI annotations import already exists"
-  fi
-  
-  # Check if delivery import exists, if not, add it
-  if ! grep -q "import \"github.com/superplanehq/superplane/pkg/protos/delivery\";" "$FILE"; then
-    sed -i '/import "protoc-gen-openapiv2\/options\/annotations.proto";/a import "github.com\/superplanehq\/superplane\/pkg\/protos\/delivery";' "$FILE"
-    echo "Added delivery import"
-  else
-    echo "Delivery import already exists"
   fi
 }
 
