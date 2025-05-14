@@ -1,6 +1,7 @@
 package public
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -12,11 +13,15 @@ import (
 	"github.com/google/uuid"
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
+	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	log "github.com/sirupsen/logrus"
 	"github.com/superplanehq/superplane/pkg/crypto"
 	"github.com/superplanehq/superplane/pkg/encryptor"
 	"github.com/superplanehq/superplane/pkg/jwt"
 	"github.com/superplanehq/superplane/pkg/models"
+	pb "github.com/superplanehq/superplane/pkg/protos/delivery"
+	grpcLib "google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 )
 
 const (
@@ -47,6 +52,26 @@ func NewServer(encryptor encryptor.Encryptor, jwtSigner *jwt.Signer, basePath st
 	server.timeoutHandlerTimeout = 15 * time.Second
 	server.InitRouter(middlewares...)
 	return server, nil
+}
+
+// RegisterGRPCGateway adds gRPC gateway handlers to the server's router
+func (s *Server) RegisterGRPCGateway(grpcServerAddr string) error {
+	ctx := context.Background()
+	grpcGatewayMux := runtime.NewServeMux()
+	opts := []grpcLib.DialOption{grpcLib.WithTransportCredentials(insecure.NewCredentials())}
+
+	err := pb.RegisterDeliveryHandlerFromEndpoint(ctx, grpcGatewayMux, grpcServerAddr, opts)
+	if err != nil {
+		return err
+	}
+
+	// Define a path prefix for the gRPC gateway and register with the server's router
+	grpcBasePath := "/api/grpc"
+	s.Router.PathPrefix(grpcBasePath).Handler(
+		http.StripPrefix(grpcBasePath, grpcGatewayMux),
+	)
+
+	return nil
 }
 
 func (s *Server) InitRouter(additionalMiddlewares ...mux.MiddlewareFunc) {

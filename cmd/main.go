@@ -1,22 +1,16 @@
 package main
 
 import (
-	"context"
-	"net/http"
 	"os"
 	"time"
 
-	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	log "github.com/sirupsen/logrus"
 	"github.com/superplanehq/superplane/pkg/config"
 	"github.com/superplanehq/superplane/pkg/encryptor"
 	grpc "github.com/superplanehq/superplane/pkg/grpc"
 	"github.com/superplanehq/superplane/pkg/jwt"
-	pb "github.com/superplanehq/superplane/pkg/protos/delivery"
 	"github.com/superplanehq/superplane/pkg/public"
 	"github.com/superplanehq/superplane/pkg/workers"
-	grpcLib "google.golang.org/grpc"
-	"google.golang.org/grpc/credentials/insecure"
 )
 
 func startWorkers(jwtSigner *jwt.Signer) {
@@ -112,49 +106,25 @@ func startPublicAPI(encryptor encryptor.Encryptor, jwtSigner *jwt.Signer) {
 		log.Panicf("Error creating public API server: %v", err)
 	}
 
+	// Add gRPC gateway functionality if enabled
+	if os.Getenv("START_GRPC_GATEWAY") == "yes" {
+		log.Println("Adding gRPC Gateway to Public API")
+
+		// Get the gRPC server address from environment or use default
+		grpcServerAddr := os.Getenv("GRPC_SERVER_ADDR")
+		if grpcServerAddr == "" {
+			grpcServerAddr = "localhost:50051" // Default to your gRPC server port
+		}
+
+		err := server.RegisterGRPCGateway(grpcServerAddr)
+		if err != nil {
+			log.Fatalf("Failed to register gRPC gateway: %v", err)
+		}
+	}
+
 	err = server.Serve("0.0.0.0", 8000)
 	if err != nil {
 		log.Fatal(err)
-	}
-}
-
-func startGRPCGateway() {
-	log.Println("Starting gRPC Gateway")
-
-	// Get gateway port from environment or use default
-	gatewayPort := os.Getenv("GRPC_GATEWAY_PORT")
-	if gatewayPort == "" {
-		gatewayPort = "8080" // Default HTTP port for gateway
-	}
-
-	// Get the gRPC server address from environment or use default
-	grpcServerAddr := os.Getenv("GRPC_SERVER_ADDR")
-	if grpcServerAddr == "" {
-		grpcServerAddr = "localhost:50051" // Default to your gRPC server port
-	}
-
-	// Create a context for the gateway
-	ctx := context.Background()
-	ctx, cancel := context.WithCancel(ctx)
-	defer cancel()
-
-	// Create a new mux for the HTTP requests
-	mux := runtime.NewServeMux()
-
-	// Set up connection options to the gRPC server
-	opts := []grpcLib.DialOption{grpcLib.WithTransportCredentials(insecure.NewCredentials())}
-
-	// Register your gRPC service with the gateway
-	err := pb.RegisterDeliveryHandlerFromEndpoint(ctx, mux, grpcServerAddr, opts)
-	if err != nil {
-		log.Fatalf("Failed to register gateway: %v", err)
-	}
-
-	// Start the HTTP server for the gateway
-	log.Printf("gRPC-Gateway started on port %s, proxying to gRPC server at %s", gatewayPort, grpcServerAddr)
-	err = http.ListenAndServe(":"+gatewayPort, mux)
-	if err != nil {
-		log.Fatalf("Failed to serve gRPC-Gateway: %v", err)
 	}
 }
 
@@ -181,11 +151,6 @@ func main() {
 
 	if os.Getenv("START_INTERNAL_API") == "yes" {
 		go startInternalAPI(encryptor)
-	}
-
-	// Start the gRPC gateway if enabled
-	if os.Getenv("START_GRPC_GATEWAY") == "yes" {
-		go startGRPCGateway()
 	}
 
 	startWorkers(jwtSigner)
