@@ -74,6 +74,7 @@ COPY --from=builder --chown=nobody:root /usr/bin/migrate /usr/bin/migrate
 COPY --from=builder --chown=nobody:root /app/build/${APP_NAME} /app/build/${APP_NAME}
 COPY --from=builder --chown=nobody:root /app/docker-entrypoint.sh /app/docker-entrypoint.sh
 COPY --from=builder --chown=nobody:root /app/db/migrations /app/db/migrations
+COPY --from=builder --chown=nobody:root /app/api/swagger /app/api/swagger
 
 USER nobody
 

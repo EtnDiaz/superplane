@@ -106,20 +106,20 @@ func startPublicAPI(encryptor encryptor.Encryptor, jwtSigner *jwt.Signer) {
 		log.Panicf("Error creating public API server: %v", err)
 	}
 
-	// Add gRPC gateway functionality if enabled
 	if os.Getenv("START_GRPC_GATEWAY") == "yes" {
 		log.Println("Adding gRPC Gateway to Public API")
 
-		// Get the gRPC server address from environment or use default
 		grpcServerAddr := os.Getenv("GRPC_SERVER_ADDR")
 		if grpcServerAddr == "" {
-			grpcServerAddr = "localhost:50051" // Default to your gRPC server port
+			grpcServerAddr = "localhost:50051"
 		}
 
 		err := server.RegisterGRPCGateway(grpcServerAddr)
 		if err != nil {
 			log.Fatalf("Failed to register gRPC gateway: %v", err)
 		}
+
+		server.RegisterOpenAPIHandler()
 	}
 
 	err = server.Serve("0.0.0.0", 8000)
