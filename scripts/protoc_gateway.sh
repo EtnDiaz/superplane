@@ -13,7 +13,6 @@ fi
 
 INTERNAL_OUT=pkg/protos
 GATEWAY_OUT=pkg/protos
-OPENAPI_OUT=api/swagger
 MODULE_NAME=github.com/superplanehq/superplane
 MODULES=$1
 PROTO_DIR="protos"
@@ -26,7 +25,6 @@ generate_gateway_files() {
   
   # Create output directories
   mkdir -p $GATEWAY_OUT/$MODULE
-  mkdir -p $OPENAPI_OUT
 
   # Generate gRPC-Gateway code
   protoc --proto_path $PROTO_DIR/ \
