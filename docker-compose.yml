@@ -17,6 +17,7 @@ services:
       APPLICATION_NAME: "superplane"
       DB_PASSWORD: "the-cake-is-a-lie"
       RABBITMQ_URL: "amqp://guest:guest@rabbitmq:5672"
+      SWAGGER_BASE_PATH: "/app/api/swagger"
       START_PUBLIC_API: "yes"
       START_INTERNAL_API: "yes"
       START_PENDING_EVENTS_WORKER: "yes"

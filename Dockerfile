@@ -18,6 +18,11 @@ RUN curl -L https://github.com/golang-migrate/migrate/releases/download/v4.18.2/
     mv /tmp/migrate /usr/bin/migrate && \
     chmod +x /usr/bin/migrate
 
+RUN curl -sL https://github.com/google/protobuf/releases/download/v3.3.0/protoc-3.3.0-linux-x86_64.zip -o protoc && \
+    unzip protoc && \
+    mv bin/protoc /usr/local/bin/protoc
+
+
 WORKDIR /app
 COPY pkg pkg
 COPY cmd cmd
@@ -25,6 +30,13 @@ COPY go.mod go.mod
 COPY go.sum go.sum
 COPY db/migrations /app/db/migrations
 COPY docker-entrypoint.sh /app/docker-entrypoint.sh
+COPY protos protos
+COPY api/swagger api/swagger
+
+RUN go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+RUN go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
+RUN go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway@latest
+RUN go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2@latest
 
 WORKDIR /app
 
@@ -32,20 +44,20 @@ FROM base AS dev
 
 COPY test test
 
-WORKDIR /tmp
-RUN curl -sL https://github.com/google/protobuf/releases/download/v3.3.0/protoc-3.3.0-linux-x86_64.zip -o protoc && \
-  unzip protoc && \
-  mv bin/protoc /usr/local/bin/protoc
-
 WORKDIR /app
 RUN go install github.com/mgechev/revive@v1.8.0
 RUN go install gotest.tools/gotestsum@v1.12.1
-RUN go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
-RUN go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
 
 CMD [ "/bin/bash",  "-c \"while sleep 1000; do :; done\"" ]
 
 FROM base AS builder
+
+RUN protoc --proto_path protos/ \
+        --proto_path protos/include \
+        --openapiv2_out=api/swagger \
+        --openapiv2_opt=logtostderr=true \
+        --openapiv2_opt=use_go_templates=true \
+        protos/superplane.proto
 
 RUN rm -rf build && go build -o build/${APP_NAME} cmd/main.go
 
@@ -72,6 +84,7 @@ COPY --from=builder --chown=nobody:root /usr/bin/migrate /usr/bin/migrate
 COPY --from=builder --chown=nobody:root /app/build/${APP_NAME} /app/build/${APP_NAME}
 COPY --from=builder --chown=nobody:root /app/docker-entrypoint.sh /app/docker-entrypoint.sh
 COPY --from=builder --chown=nobody:root /app/db/migrations /app/db/migrations
+COPY --from=builder --chown=nobody:root /app/api/swagger /app/api/swagger
 
 USER nobody
 

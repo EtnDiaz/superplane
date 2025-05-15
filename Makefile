@@ -3,7 +3,7 @@
 APP_NAME=superplane
 APP_ENV=prod
 
-test.setup:
+test.setup: openapi.spec.gen
 	docker-compose build
 	docker-compose run --rm app go get ./...
 	-$(MAKE) db.test.create
@@ -54,11 +54,11 @@ db.test.delete:
 # Protobuf compilation
 #
 
-INTERNAL_API_BRANCH ?= master
-TMP_REPO_DIR ?= /tmp/internal_api
-INTERNAL_API_MODULES ?= delivery
+MODULES := superplane
+REST_API_MODULES := superplane
 pb.gen:
-	rm -rf $(TMP_REPO_DIR)
-	git clone git@github.com:renderedtext/internal_api.git $(TMP_REPO_DIR) && (cd $(TMP_REPO_DIR) && git checkout $(INTERNAL_API_BRANCH) && cd -)
-	docker-compose run --rm --no-deps app /app/scripts/protoc.sh $(INTERNAL_API_MODULES) $(INTERNAL_API_BRANCH) $(TMP_REPO_DIR)
-	rm -rf $(TMP_REPO_DIR)
+	docker-compose run --rm --no-deps app /app/scripts/protoc.sh $(MODULES)
+	docker-compose run --rm --no-deps app /app/scripts/protoc_gateway.sh $(REST_API_MODULES)
+
+openapi.spec.gen:
+	DOCKER_DEFAULT_PLATFORM=linux/amd64 docker-compose run --rm --no-deps app /app/scripts/protoc_openapi_spec.sh $(REST_API_MODULES)
