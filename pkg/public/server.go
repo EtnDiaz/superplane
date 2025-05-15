@@ -65,39 +65,47 @@ func (s *Server) RegisterGRPCGateway(grpcServerAddr string) error {
 		return err
 	}
 
-	// Define a path prefix for the gRPC gateway and register with the server's router
-	grpcBasePath := "/api/grpc"
-	s.Router.PathPrefix(grpcBasePath).Handler(
-		http.StripPrefix(grpcBasePath, grpcGatewayMux),
-	)
+	err = grpcGatewayMux.HandlePath("GET", "/hello/{name}", func(w http.ResponseWriter, r *http.Request, pathParams map[string]string) {
+		w.Write([]byte("hello " + pathParams["name"]))
+	})
+	if err != nil {
+		return err
+	}
+
+	go func() {
+		log.Printf("Starting gRPC Gateway server on :8081")
+		if err := http.ListenAndServe(":8081", grpcGatewayMux); err != nil {
+			log.Fatalf("Failed to start gRPC Gateway server: %v", err)
+		}
+	}()
 
 	return nil
 }
 
 // RegisterOpenAPIHandler adds handlers to serve the OpenAPI specification and Swagger UI
 func (s *Server) RegisterOpenAPIHandler() {
-	path := os.Getenv("SWAGGER_BASE_PATH")
-	if path == "" {
+	swaggerFilesPath := os.Getenv("SWAGGER_BASE_PATH")
+	if swaggerFilesPath == "" {
 		log.Errorf("SWAGGER_BASE_PATH is not set")
 		return
 	}
 
-	if _, err := os.Stat(path); os.IsNotExist(err) {
-		log.Errorf("API documentation directory %s does not exist", path)
+	if _, err := os.Stat(swaggerFilesPath); os.IsNotExist(err) {
+		log.Errorf("API documentation directory %s does not exist", swaggerFilesPath)
 		return
 	}
 
-	s.Router.HandleFunc("/docs", func(w http.ResponseWriter, r *http.Request) {
-		http.ServeFile(w, r, path+"/swagger-ui.html")
+	s.Router.HandleFunc(s.BasePath+"/docs", func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFile(w, r, swaggerFilesPath+"/swagger-ui.html")
 	})
 
-	s.Router.HandleFunc("/docs/delivery.swagger.json", func(w http.ResponseWriter, r *http.Request) {
-		http.ServeFile(w, r, path+"/delivery.swagger.json")
+	s.Router.HandleFunc(s.BasePath+"/docs/delivery.swagger.json", func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFile(w, r, swaggerFilesPath+"/delivery.swagger.json")
 	})
 
-	log.Infof("OpenAPI specification available at %s", path)
-	log.Infof("Swagger UI available at %s", path)
-	log.Infof("Raw API JSON available at %s", path+"/delivery.swagger.json")
+	log.Infof("OpenAPI specification available at %s", swaggerFilesPath)
+	log.Infof("Swagger UI available at %s", swaggerFilesPath)
+	log.Infof("Raw API JSON available at %s", swaggerFilesPath+"/delivery.swagger.json")
 }
 
 func (s *Server) InitRouter(additionalMiddlewares ...mux.MiddlewareFunc) {
