@@ -7,8 +7,6 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
-	"fmt"
-	"io"
 	"net/http"
 	"net/http/httptest"
 	"os"
@@ -609,21 +607,16 @@ func Test__GRPCGatewayRegistration(t *testing.T) {
 	server, err := NewServer(&encryptor.NoOpEncryptor{}, signer, "")
 	require.NoError(t, err)
 
-	port := 8081
-	gatewayAddr := fmt.Sprintf("localhost:%d", port)
-
 	err = server.RegisterGRPCGateway("localhost:50051")
 	require.NoError(t, err)
 
-	time.Sleep(100 * time.Millisecond)
+	response := execRequest(server, requestParams{
+		method: "GET",
+		path:   "/api/v1/canvases/is-alive",
+	})
 
-	resp, err := http.Get(fmt.Sprintf("http://%s/hello/World", gatewayAddr))
-	require.NoError(t, err)
-	defer resp.Body.Close()
-
-	body, err := io.ReadAll(resp.Body)
-	require.NoError(t, err)
-	require.Equal(t, "hello World", string(body))
+	require.Equal(t, "", response.Body.String())
+	require.Equal(t, 200, response.Code)
 }
 
 // Helper function to check if the required Swagger files exist

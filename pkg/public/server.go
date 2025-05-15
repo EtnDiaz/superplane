@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"net/url"
 	"os"
 	"strings"
 	"time"
@@ -54,10 +55,15 @@ func NewServer(encryptor encryptor.Encryptor, jwtSigner *jwt.Signer, basePath st
 	return server, nil
 }
 
-// RegisterGRPCGateway adds gRPC gateway handlers to the server's router
 func (s *Server) RegisterGRPCGateway(grpcServerAddr string) error {
 	ctx := context.Background()
-	grpcGatewayMux := runtime.NewServeMux()
+
+	grpcGatewayMux := runtime.NewServeMux(
+		runtime.WithIncomingHeaderMatcher(func(key string) (string, bool) {
+			return key, true
+		}),
+	)
+
 	opts := []grpcLib.DialOption{grpcLib.WithTransportCredentials(insecure.NewCredentials())}
 
 	err := pb.RegisterDeliveryHandlerFromEndpoint(ctx, grpcGatewayMux, grpcServerAddr, opts)
@@ -65,19 +71,24 @@ func (s *Server) RegisterGRPCGateway(grpcServerAddr string) error {
 		return err
 	}
 
-	err = grpcGatewayMux.HandlePath("GET", "/hello/{name}", func(w http.ResponseWriter, r *http.Request, pathParams map[string]string) {
-		w.Write([]byte("hello " + pathParams["name"]))
+	err = grpcGatewayMux.HandlePath("GET", "/api/v1/canvases/is-alive", func(w http.ResponseWriter, r *http.Request, pathParams map[string]string) {
+		w.WriteHeader(http.StatusOK)
 	})
+
 	if err != nil {
 		return err
 	}
 
-	go func() {
-		log.Printf("Starting gRPC Gateway server on :8081")
-		if err := http.ListenAndServe(":8081", grpcGatewayMux); err != nil {
-			log.Fatalf("Failed to start gRPC Gateway server: %v", err)
-		}
-	}()
+	// This is necessary because it is not possible to use the current router with
+	// runtime Mux. Runtime mux has no specification for the added paths and it the only
+	// supported tool for grpc-gateway.
+	s.Router.PathPrefix("/api/v1/canvases").Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		r2 := new(http.Request)
+		*r2 = *r
+		r2.URL = new(url.URL)
+		*r2.URL = *r.URL
+		grpcGatewayMux.ServeHTTP(w, r2)
+	}))
 
 	return nil
 }
