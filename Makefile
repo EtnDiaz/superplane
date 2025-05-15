@@ -54,10 +54,8 @@ db.test.delete:
 # Protobuf compilation
 #
 
+MODULES := superplane
+GATEWAY_MODULES := superplane
 pb.gen:
-	docker-compose run --rm --no-deps app /app/scripts/protoc.sh
-
-# Generate REST API and OpenAPI spec for Delivery service
-pb.gen.rest:
-	@echo "Generating gRPC-Gateway and OpenAPI files for Delivery service..."
-	docker-compose run --rm --no-deps app /app/scripts/protoc_gateway.sh delivery
+	docker-compose run --rm --no-deps app /app/scripts/protoc.sh $(MODULES)
+	docker-compose run --rm --no-deps app /app/scripts/protoc_gateway.sh $(GATEWAY_MODULES)

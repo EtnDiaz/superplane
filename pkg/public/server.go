@@ -110,13 +110,13 @@ func (s *Server) RegisterOpenAPIHandler() {
 		http.ServeFile(w, r, swaggerFilesPath+"/swagger-ui.html")
 	})
 
-	s.Router.HandleFunc(s.BasePath+"/docs/delivery.swagger.json", func(w http.ResponseWriter, r *http.Request) {
-		http.ServeFile(w, r, swaggerFilesPath+"/delivery.swagger.json")
+	s.Router.HandleFunc(s.BasePath+"/docs/superplane.swagger.json", func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFile(w, r, swaggerFilesPath+"/superplane.swagger.json")
 	})
 
 	log.Infof("OpenAPI specification available at %s", swaggerFilesPath)
 	log.Infof("Swagger UI available at %s", swaggerFilesPath)
-	log.Infof("Raw API JSON available at %s", swaggerFilesPath+"/delivery.swagger.json")
+	log.Infof("Raw API JSON available at %s", swaggerFilesPath+"/superplane.swagger.json")
 }
 
 func (s *Server) InitRouter(additionalMiddlewares ...mux.MiddlewareFunc) {

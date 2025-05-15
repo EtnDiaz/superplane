@@ -1,17 +1,17 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "Delivery API",
-    "description": "API for the Delivery service",
+    "title": "Superplane API",
+    "description": "API for the Superplane service",
     "version": "1.0",
     "contact": {
       "name": "API Support",
-      "email": "support@example.com"
+      "email": "support@superplane.com"
     }
   },
   "tags": [
     {
-      "name": "Delivery"
+      "name": "Superplane"
     }
   ],
   "schemes": [
@@ -29,12 +29,12 @@
       "post": {
         "summary": "Create a new canvas",
         "description": "Creates a new canvas with the given name and organization ID",
-        "operationId": "Delivery_CreateCanvas",
+        "operationId": "Superplane_CreateCanvas",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/DeliveryCreateCanvasResponse"
+              "$ref": "#/definitions/SuperplaneCreateCanvasResponse"
             }
           },
           "default": {
@@ -50,7 +50,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/DeliveryCreateCanvasRequest"
+              "$ref": "#/definitions/SuperplaneCreateCanvasRequest"
             }
           }
         ],
@@ -63,12 +63,12 @@
       "get": {
         "summary": "List event sources",
         "description": "Returns a list of all event sources for the specified canvas",
-        "operationId": "Delivery_ListEventSources",
+        "operationId": "Superplane_ListEventSources",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/DeliveryListEventSourcesResponse"
+              "$ref": "#/definitions/SuperplaneListEventSourcesResponse"
             }
           },
           "default": {
@@ -99,12 +99,12 @@
       "post": {
         "summary": "Create a new event source",
         "description": "Creates a new event source for the specified canvas",
-        "operationId": "Delivery_CreateEventSource",
+        "operationId": "Superplane_CreateEventSource",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/DeliveryCreateEventSourceResponse"
+              "$ref": "#/definitions/SuperplaneCreateEventSourceResponse"
             }
           },
           "default": {
@@ -126,7 +126,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/DeliveryCreateEventSourceBody"
+              "$ref": "#/definitions/SuperplaneCreateEventSourceBody"
             }
           }
         ],
@@ -139,12 +139,12 @@
       "get": {
         "summary": "Get event source details",
         "description": "Returns the details of a specific event source",
-        "operationId": "Delivery_DescribeEventSource",
+        "operationId": "Superplane_DescribeEventSource",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/DeliveryDescribeEventSourceResponse"
+              "$ref": "#/definitions/SuperplaneDescribeEventSourceResponse"
             }
           },
           "default": {
@@ -189,12 +189,12 @@
       "get": {
         "summary": "List stages",
         "description": "Returns a list of all stages for the specified canvas",
-        "operationId": "Delivery_ListStages",
+        "operationId": "Superplane_ListStages",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/DeliveryListStagesResponse"
+              "$ref": "#/definitions/SuperplaneListStagesResponse"
             }
           },
           "default": {
@@ -225,12 +225,12 @@
       "post": {
         "summary": "Create a new stage",
         "description": "Creates a new stage for the specified canvas",
-        "operationId": "Delivery_CreateStage",
+        "operationId": "Superplane_CreateStage",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/DeliveryCreateStageResponse"
+              "$ref": "#/definitions/SuperplaneCreateStageResponse"
             }
           },
           "default": {
@@ -252,7 +252,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/DeliveryCreateStageBody"
+              "$ref": "#/definitions/SuperplaneCreateStageBody"
             }
           }
         ],
@@ -265,12 +265,12 @@
       "get": {
         "summary": "Get stage details",
         "description": "Returns the details of a specific stage",
-        "operationId": "Delivery_DescribeStage",
+        "operationId": "Superplane_DescribeStage",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/DeliveryDescribeStageResponse"
+              "$ref": "#/definitions/SuperplaneDescribeStageResponse"
             }
           },
           "default": {
@@ -313,12 +313,12 @@
       "patch": {
         "summary": "Update a stage",
         "description": "Updates the specified stage",
-        "operationId": "Delivery_UpdateStage",
+        "operationId": "Superplane_UpdateStage",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/DeliveryUpdateStageResponse"
+              "$ref": "#/definitions/SuperplaneUpdateStageResponse"
             }
           },
           "default": {
@@ -347,7 +347,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/DeliveryUpdateStageBody"
+              "$ref": "#/definitions/SuperplaneUpdateStageBody"
             }
           }
         ],
@@ -360,12 +360,12 @@
       "get": {
         "summary": "List stage events",
         "description": "Returns a list of events for the specified stage",
-        "operationId": "Delivery_ListStageEvents",
+        "operationId": "Superplane_ListStageEvents",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/DeliveryListStageEventsResponse"
+              "$ref": "#/definitions/SuperplaneListStageEventsResponse"
             }
           },
           "default": {
@@ -439,12 +439,12 @@
       "post": {
         "summary": "Approve a stage event",
         "description": "Approves the specified stage event",
-        "operationId": "Delivery_ApproveStageEvent",
+        "operationId": "Superplane_ApproveStageEvent",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/DeliveryApproveStageEventResponse"
+              "$ref": "#/definitions/SuperplaneApproveStageEventResponse"
             }
           },
           "default": {
@@ -478,7 +478,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/DeliveryApproveStageEventBody"
+              "$ref": "#/definitions/SuperplaneApproveStageEventBody"
             }
           }
         ],
@@ -491,12 +491,12 @@
       "get": {
         "summary": "Get canvas details",
         "description": "Returns the details of a specific canvas",
-        "operationId": "Delivery_DescribeCanvas",
+        "operationId": "Superplane_DescribeCanvas",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/DeliveryDescribeCanvasResponse"
+              "$ref": "#/definitions/SuperplaneDescribeCanvasResponse"
             }
           },
           "default": {
@@ -535,12 +535,12 @@
       "get": {
         "summary": "List tags",
         "description": "Returns a list of tags, optionally filtered by stage",
-        "operationId": "Delivery_ListTags2",
+        "operationId": "Superplane_ListTags2",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/DeliveryListTagsResponse"
+              "$ref": "#/definitions/SuperplaneListTagsResponse"
             }
           },
           "default": {
@@ -594,12 +594,12 @@
       "get": {
         "summary": "List tags",
         "description": "Returns a list of tags, optionally filtered by stage",
-        "operationId": "Delivery_ListTags",
+        "operationId": "Superplane_ListTags",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/DeliveryListTagsResponse"
+              "$ref": "#/definitions/SuperplaneListTagsResponse"
             }
           },
           "default": {
@@ -651,12 +651,12 @@
       "put": {
         "summary": "Update tag state",
         "description": "Updates the state of the specified tag",
-        "operationId": "Delivery_UpdateTagState",
+        "operationId": "Superplane_UpdateTagState",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/DeliveryUpdateTagStateResponse"
+              "$ref": "#/definitions/SuperplaneUpdateTagStateResponse"
             }
           },
           "default": {
@@ -672,7 +672,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/DeliveryUpdateTagStateRequest"
+              "$ref": "#/definitions/SuperplaneUpdateTagStateRequest"
             }
           }
         ],
@@ -731,7 +731,20 @@
         }
       }
     },
-    "DeliveryApproveStageEventBody": {
+    "StageEventStateReason": {
+      "type": "string",
+      "enum": [
+        "STATE_REASON_UNKNOWN",
+        "STATE_REASON_APPROVAL",
+        "STATE_REASON_TIME_WINDOW",
+        "STATE_REASON_EXECUTION",
+        "STATE_REASON_CONNECTION",
+        "STATE_REASON_CANCELLED",
+        "STATE_REASON_UNHEALTHY"
+      ],
+      "default": "STATE_REASON_UNKNOWN"
+    },
+    "SuperplaneApproveStageEventBody": {
       "type": "object",
       "properties": {
         "organizationId": {
@@ -742,15 +755,15 @@
         }
       }
     },
-    "DeliveryApproveStageEventResponse": {
+    "SuperplaneApproveStageEventResponse": {
       "type": "object",
       "properties": {
         "event": {
-          "$ref": "#/definitions/DeliveryStageEvent"
+          "$ref": "#/definitions/SuperplaneStageEvent"
         }
       }
     },
-    "DeliveryCanvas": {
+    "SuperplaneCanvas": {
       "type": "object",
       "properties": {
         "id": {
@@ -771,21 +784,21 @@
         }
       }
     },
-    "DeliveryCondition": {
+    "SuperplaneCondition": {
       "type": "object",
       "properties": {
         "type": {
-          "$ref": "#/definitions/DeliveryConditionType"
+          "$ref": "#/definitions/SuperplaneConditionType"
         },
         "approval": {
-          "$ref": "#/definitions/DeliveryConditionApproval"
+          "$ref": "#/definitions/SuperplaneConditionApproval"
         },
         "timeWindow": {
-          "$ref": "#/definitions/DeliveryConditionTimeWindow"
+          "$ref": "#/definitions/SuperplaneConditionTimeWindow"
         }
       }
     },
-    "DeliveryConditionApproval": {
+    "SuperplaneConditionApproval": {
       "type": "object",
       "properties": {
         "count": {
@@ -794,7 +807,7 @@
         }
       }
     },
-    "DeliveryConditionTimeWindow": {
+    "SuperplaneConditionTimeWindow": {
       "type": "object",
       "properties": {
         "start": {
@@ -811,7 +824,7 @@
         }
       }
     },
-    "DeliveryConditionType": {
+    "SuperplaneConditionType": {
       "type": "string",
       "enum": [
         "CONDITION_TYPE_UNKNOWN",
@@ -820,11 +833,11 @@
       ],
       "default": "CONDITION_TYPE_UNKNOWN"
     },
-    "DeliveryConnection": {
+    "SuperplaneConnection": {
       "type": "object",
       "properties": {
         "type": {
-          "$ref": "#/definitions/DeliveryConnectionType"
+          "$ref": "#/definitions/SuperplaneConnectionType"
         },
         "name": {
           "type": "string"
@@ -841,7 +854,7 @@
         }
       }
     },
-    "DeliveryConnectionType": {
+    "SuperplaneConnectionType": {
       "type": "string",
       "enum": [
         "TYPE_UNKNOWN",
@@ -850,7 +863,7 @@
       ],
       "default": "TYPE_UNKNOWN"
     },
-    "DeliveryCreateCanvasRequest": {
+    "SuperplaneCreateCanvasRequest": {
       "type": "object",
       "properties": {
         "name": {
@@ -864,15 +877,15 @@
         }
       }
     },
-    "DeliveryCreateCanvasResponse": {
+    "SuperplaneCreateCanvasResponse": {
       "type": "object",
       "properties": {
         "canvas": {
-          "$ref": "#/definitions/DeliveryCanvas"
+          "$ref": "#/definitions/SuperplaneCanvas"
         }
       }
     },
-    "DeliveryCreateEventSourceBody": {
+    "SuperplaneCreateEventSourceBody": {
       "type": "object",
       "properties": {
         "name": {
@@ -886,18 +899,18 @@
         }
       }
     },
-    "DeliveryCreateEventSourceResponse": {
+    "SuperplaneCreateEventSourceResponse": {
       "type": "object",
       "properties": {
         "eventSource": {
-          "$ref": "#/definitions/DeliveryEventSource"
+          "$ref": "#/definitions/SuperplaneEventSource"
         },
         "key": {
           "type": "string"
         }
       }
     },
-    "DeliveryCreateStageBody": {
+    "SuperplaneCreateStageBody": {
       "type": "object",
       "properties": {
         "name": {
@@ -913,57 +926,57 @@
           "type": "array",
           "items": {
             "type": "object",
-            "$ref": "#/definitions/DeliveryConnection"
+            "$ref": "#/definitions/SuperplaneConnection"
           }
         },
         "conditions": {
           "type": "array",
           "items": {
             "type": "object",
-            "$ref": "#/definitions/DeliveryCondition"
+            "$ref": "#/definitions/SuperplaneCondition"
           }
         },
         "use": {
-          "$ref": "#/definitions/DeliveryTagUsageDefinition"
+          "$ref": "#/definitions/SuperplaneTagUsageDefinition"
         },
         "runTemplate": {
-          "$ref": "#/definitions/DeliveryRunTemplate"
+          "$ref": "#/definitions/SuperplaneRunTemplate"
         }
       }
     },
-    "DeliveryCreateStageResponse": {
+    "SuperplaneCreateStageResponse": {
       "type": "object",
       "properties": {
         "stage": {
-          "$ref": "#/definitions/DeliveryStage"
+          "$ref": "#/definitions/SuperplaneStage"
         }
       }
     },
-    "DeliveryDescribeCanvasResponse": {
+    "SuperplaneDescribeCanvasResponse": {
       "type": "object",
       "properties": {
         "canvas": {
-          "$ref": "#/definitions/DeliveryCanvas"
+          "$ref": "#/definitions/SuperplaneCanvas"
         }
       }
     },
-    "DeliveryDescribeEventSourceResponse": {
+    "SuperplaneDescribeEventSourceResponse": {
       "type": "object",
       "properties": {
         "eventSource": {
-          "$ref": "#/definitions/DeliveryEventSource"
+          "$ref": "#/definitions/SuperplaneEventSource"
         }
       }
     },
-    "DeliveryDescribeStageResponse": {
+    "SuperplaneDescribeStageResponse": {
       "type": "object",
       "properties": {
         "stage": {
-          "$ref": "#/definitions/DeliveryStage"
+          "$ref": "#/definitions/SuperplaneStage"
         }
       }
     },
-    "DeliveryEventSource": {
+    "SuperplaneEventSource": {
       "type": "object",
       "properties": {
         "id": {
@@ -984,66 +997,66 @@
         }
       }
     },
-    "DeliveryListEventSourcesResponse": {
+    "SuperplaneListEventSourcesResponse": {
       "type": "object",
       "properties": {
         "eventSources": {
           "type": "array",
           "items": {
             "type": "object",
-            "$ref": "#/definitions/DeliveryEventSource"
+            "$ref": "#/definitions/SuperplaneEventSource"
           }
         }
       }
     },
-    "DeliveryListStageEventsResponse": {
+    "SuperplaneListStageEventsResponse": {
       "type": "object",
       "properties": {
         "events": {
           "type": "array",
           "items": {
             "type": "object",
-            "$ref": "#/definitions/DeliveryStageEvent"
+            "$ref": "#/definitions/SuperplaneStageEvent"
           }
         }
       }
     },
-    "DeliveryListStagesResponse": {
+    "SuperplaneListStagesResponse": {
       "type": "object",
       "properties": {
         "stages": {
           "type": "array",
           "items": {
             "type": "object",
-            "$ref": "#/definitions/DeliveryStage"
+            "$ref": "#/definitions/SuperplaneStage"
           }
         }
       }
     },
-    "DeliveryListTagsResponse": {
+    "SuperplaneListTagsResponse": {
       "type": "object",
       "properties": {
         "tags": {
           "type": "array",
           "items": {
             "type": "object",
-            "$ref": "#/definitions/DeliveryStageTag"
+            "$ref": "#/definitions/SuperplaneStageTag"
           }
         }
       }
     },
-    "DeliveryRunTemplate": {
+    "SuperplaneRunTemplate": {
       "type": "object",
       "properties": {
         "type": {
-          "$ref": "#/definitions/DeliveryRunTemplateType"
+          "$ref": "#/definitions/SuperplaneRunTemplateType"
         },
         "semaphore": {
-          "$ref": "#/definitions/DeliverySemaphoreRunTemplate"
+          "$ref": "#/definitions/SuperplaneSemaphoreRunTemplate"
         }
       }
     },
-    "DeliveryRunTemplateType": {
+    "SuperplaneRunTemplateType": {
       "type": "string",
       "enum": [
         "TYPE_UNKNOWN",
@@ -1051,7 +1064,7 @@
       ],
       "default": "TYPE_UNKNOWN"
     },
-    "DeliverySemaphoreRunTemplate": {
+    "SuperplaneSemaphoreRunTemplate": {
       "type": "object",
       "properties": {
         "projectId": {
@@ -1074,7 +1087,7 @@
         }
       }
     },
-    "DeliveryStage": {
+    "SuperplaneStage": {
       "type": "object",
       "properties": {
         "id": {
@@ -1097,25 +1110,25 @@
           "type": "array",
           "items": {
             "type": "object",
-            "$ref": "#/definitions/DeliveryConnection"
+            "$ref": "#/definitions/SuperplaneConnection"
           }
         },
         "conditions": {
           "type": "array",
           "items": {
             "type": "object",
-            "$ref": "#/definitions/DeliveryCondition"
+            "$ref": "#/definitions/SuperplaneCondition"
           }
         },
         "use": {
-          "$ref": "#/definitions/DeliveryTagUsageDefinition"
+          "$ref": "#/definitions/SuperplaneTagUsageDefinition"
         },
         "runTemplate": {
-          "$ref": "#/definitions/DeliveryRunTemplate"
+          "$ref": "#/definitions/SuperplaneRunTemplate"
         }
       }
     },
-    "DeliveryStageEvent": {
+    "SuperplaneStageEvent": {
       "type": "object",
       "properties": {
         "id": {
@@ -1125,10 +1138,10 @@
           "type": "string"
         },
         "sourceType": {
-          "$ref": "#/definitions/DeliveryConnectionType"
+          "$ref": "#/definitions/SuperplaneConnectionType"
         },
         "state": {
-          "$ref": "#/definitions/DeliveryStageEventState"
+          "$ref": "#/definitions/SuperplaneStageEventState"
         },
         "stateReason": {
           "$ref": "#/definitions/StageEventStateReason"
@@ -1141,19 +1154,19 @@
           "type": "array",
           "items": {
             "type": "object",
-            "$ref": "#/definitions/DeliveryStageEventApproval"
+            "$ref": "#/definitions/SuperplaneStageEventApproval"
           }
         },
         "tags": {
           "type": "array",
           "items": {
             "type": "object",
-            "$ref": "#/definitions/InternalApiDeliveryTag"
+            "$ref": "#/definitions/SuperplaneTag"
           }
         }
       }
     },
-    "DeliveryStageEventApproval": {
+    "SuperplaneStageEventApproval": {
       "type": "object",
       "properties": {
         "approvedBy": {
@@ -1165,7 +1178,7 @@
         }
       }
     },
-    "DeliveryStageEventState": {
+    "SuperplaneStageEventState": {
       "type": "string",
       "enum": [
         "STATE_UNKNOWN",
@@ -1175,21 +1188,35 @@
       ],
       "default": "STATE_UNKNOWN"
     },
-    "DeliveryStageTag": {
+    "SuperplaneStageTag": {
       "type": "object",
       "properties": {
         "stageId": {
           "type": "string"
         },
         "stageEventState": {
-          "$ref": "#/definitions/DeliveryStageEventState"
+          "$ref": "#/definitions/SuperplaneStageEventState"
         },
         "tag": {
-          "$ref": "#/definitions/InternalApiDeliveryTag"
+          "$ref": "#/definitions/SuperplaneTag"
         }
       }
     },
-    "DeliveryTagDefinition": {
+    "SuperplaneTag": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        },
+        "state": {
+          "$ref": "#/definitions/SuperplaneTagState"
+        }
+      }
+    },
+    "SuperplaneTagDefinition": {
       "type": "object",
       "properties": {
         "name": {
@@ -1200,7 +1227,7 @@
         }
       }
     },
-    "DeliveryTagState": {
+    "SuperplaneTagState": {
       "type": "string",
       "enum": [
         "TAG_STATE_UNKNOWN",
@@ -1209,7 +1236,7 @@
       ],
       "default": "TAG_STATE_UNKNOWN"
     },
-    "DeliveryTagUsageDefinition": {
+    "SuperplaneTagUsageDefinition": {
       "type": "object",
       "properties": {
         "from": {
@@ -1222,19 +1249,19 @@
           "type": "array",
           "items": {
             "type": "object",
-            "$ref": "#/definitions/DeliveryTagDefinition"
+            "$ref": "#/definitions/SuperplaneTagDefinition"
           }
         }
       }
     },
-    "DeliveryUpdateStageBody": {
+    "SuperplaneUpdateStageBody": {
       "type": "object",
       "properties": {
         "connections": {
           "type": "array",
           "items": {
             "type": "object",
-            "$ref": "#/definitions/DeliveryConnection"
+            "$ref": "#/definitions/SuperplaneConnection"
           }
         },
         "requesterId": {
@@ -1242,51 +1269,24 @@
         }
       }
     },
-    "DeliveryUpdateStageResponse": {
+    "SuperplaneUpdateStageResponse": {
       "type": "object",
       "properties": {
         "stage": {
-          "$ref": "#/definitions/DeliveryStage"
+          "$ref": "#/definitions/SuperplaneStage"
         }
       }
     },
-    "DeliveryUpdateTagStateRequest": {
+    "SuperplaneUpdateTagStateRequest": {
       "type": "object",
       "properties": {
         "tag": {
-          "$ref": "#/definitions/InternalApiDeliveryTag"
+          "$ref": "#/definitions/SuperplaneTag"
         }
       }
     },
-    "DeliveryUpdateTagStateResponse": {
+    "SuperplaneUpdateTagStateResponse": {
       "type": "object"
-    },
-    "InternalApiDeliveryTag": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string"
-        },
-        "value": {
-          "type": "string"
-        },
-        "state": {
-          "$ref": "#/definitions/DeliveryTagState"
-        }
-      }
-    },
-    "StageEventStateReason": {
-      "type": "string",
-      "enum": [
-        "STATE_REASON_UNKNOWN",
-        "STATE_REASON_APPROVAL",
-        "STATE_REASON_TIME_WINDOW",
-        "STATE_REASON_EXECUTION",
-        "STATE_REASON_CONNECTION",
-        "STATE_REASON_CANCELLED",
-        "STATE_REASON_UNHEALTHY"
-      ],
-      "default": "STATE_REASON_UNKNOWN"
     },
     "protobufAny": {
       "type": "object",

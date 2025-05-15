@@ -15,7 +15,7 @@ INTERNAL_OUT=pkg/protos
 GATEWAY_OUT=pkg/protos
 OPENAPI_OUT=api/swagger
 MODULE_NAME=github.com/superplanehq/superplane
-MODULES=(superplane)
+MODULES=$1
 PROTO_DIR="protos"
 
 # Install required third-party proto files if not already present

@@ -547,7 +547,7 @@ func Test__OpenAPIEndpoints(t *testing.T) {
 	t.Run("OpenAPI JSON spec is accessible", func(t *testing.T) {
 		response := execRequest(server, requestParams{
 			method: "GET",
-			path:   "/docs/delivery.swagger.json",
+			path:   "/docs/superplane.swagger.json",
 		})
 
 		require.Equal(t, 200, response.Code)
@@ -580,7 +580,7 @@ func Test__OpenAPIEndpoints(t *testing.T) {
 	t.Run("OpenAPI spec is accessible via directory path", func(t *testing.T) {
 		response := execRequest(server, requestParams{
 			method: "GET",
-			path:   "/docs/delivery.swagger.json",
+			path:   "/docs/superplane.swagger.json",
 		})
 
 		require.Equal(t, 200, response.Code)
@@ -629,11 +629,11 @@ func checkSwaggerFiles(t *testing.T) {
 	require.True(t, dirInfo.IsDir(), "api/swagger should be a directory")
 
 	// Check for the OpenAPI spec JSON file
-	specPath := filepath.Join(apiDir, "delivery.swagger.json")
+	specPath := filepath.Join(apiDir, "superplane.swagger.json")
 	fileInfo, err := os.Stat(specPath)
-	require.NoError(t, err, "delivery.swagger.json should exist")
-	require.False(t, fileInfo.IsDir(), "delivery.swagger.json should be a file")
-	require.Greater(t, fileInfo.Size(), int64(0), "delivery.swagger.json should not be empty")
+	require.NoError(t, err, "superplane.swagger.json should exist")
+	require.False(t, fileInfo.IsDir(), "superplane.swagger.json should be a file")
+	require.Greater(t, fileInfo.Size(), int64(0), "superplane.swagger.json should not be empty")
 
 	// Check for the Swagger UI HTML file
 	htmlPath := filepath.Join(apiDir, "swagger-ui.html")
@@ -648,7 +648,7 @@ func checkSwaggerFiles(t *testing.T) {
 
 	var data map[string]interface{}
 	err = json.Unmarshal(jsonData, &data)
-	require.NoError(t, err, "delivery.swagger.json should contain valid JSON")
+	require.NoError(t, err, "superplane.swagger.json should contain valid JSON")
 
 	// Check that the HTML file contains expected content
 	htmlData, err := os.ReadFile(htmlPath)
