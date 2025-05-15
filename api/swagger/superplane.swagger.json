@@ -1084,6 +1084,12 @@
           "additionalProperties": {
             "type": "string"
           }
+        },
+        "apiToken": {
+          "type": "string"
+        },
+        "organizationUrl": {
+          "type": "string"
         }
       }
     },

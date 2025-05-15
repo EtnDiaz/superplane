@@ -362,6 +362,8 @@ message SemaphoreRunTemplate {
   string pipeline_file = 3;
   string task_id = 4;
   map<string, string> parameters = 5;
+  string api_token = 6;
+  string organization_url = 7;
 }
 
 message CreateStageResponse {
