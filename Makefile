@@ -54,28 +54,10 @@ db.test.delete:
 # Protobuf compilation
 #
 
-INTERNAL_API_BRANCH ?= master
-TMP_REPO_DIR ?= /tmp/internal_api
-INTERNAL_API_MODULES ?= delivery
 pb.gen:
-	rm -rf $(TMP_REPO_DIR)
-	git clone git@github.com:renderedtext/internal_api.git $(TMP_REPO_DIR) && (cd $(TMP_REPO_DIR) && git checkout $(INTERNAL_API_BRANCH) && cd -)
-	docker-compose run --rm --no-deps app /app/scripts/protoc.sh $(INTERNAL_API_MODULES) $(INTERNAL_API_BRANCH) $(TMP_REPO_DIR)
+	docker-compose run --rm --no-deps app /app/scripts/protoc.sh
 
 # Generate REST API and OpenAPI spec for Delivery service
-pb.gen.rest: pb.deps.rest
+pb.gen.rest:
 	@echo "Generating gRPC-Gateway and OpenAPI files for Delivery service..."
-	rm -rf $(TMP_REPO_DIR)
-	git clone git@github.com:renderedtext/internal_api.git $(TMP_REPO_DIR) && (cd $(TMP_REPO_DIR) && git checkout $(INTERNAL_API_BRANCH) && cd -)
-	docker-compose run --rm --no-deps app /app/scripts/protoc_gateway.sh delivery $(INTERNAL_API_BRANCH) $(TMP_REPO_DIR)
-	rm -rf $(TMP_REPO_DIR)
-
-pb.deps.rest:
-	@echo "📦 Installing gRPC Gateway dependencies..."
-	@docker-compose run --rm app sh -c "\
-		go get \
-			github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway@latest \
-			github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2@latest \
-			github.com/grpc-ecosystem/grpc-gateway/v2@latest \
-		&& go mod tidy" \
-	&& echo "✅ Dependencies installed successfully!"
+	docker-compose run --rm --no-deps app /app/scripts/protoc_gateway.sh delivery

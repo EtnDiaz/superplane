@@ -11,18 +11,16 @@ then
   set -x
 fi
 
-INTERNAL_API_REPO=git@github.com:renderedtext/internal_api.git
-INTERNAL_API_OUT=pkg/protos
+INTERNAL_OUT=pkg/protos
 GATEWAY_OUT=pkg/protos
 OPENAPI_OUT=api/swagger
 MODULE_NAME=github.com/superplanehq/superplane
-MODULES=(${1//,/ })
-INTERNAL_API_BRANCH=${2:-master}
-INTERNAL_API_FOLDER=${3:-"/tmp/internal_api"}
+MODULES=(superplane)
+PROTO_DIR="protos"
 
 # Install required third-party proto files if not already present
 install_third_party_protos() {
-  THIRD_PARTY_DIR=$INTERNAL_API_FOLDER/include/google/api
+  THIRD_PARTY_DIR=$PROTO_DIR/include/google/api
   if [ ! -d "$THIRD_PARTY_DIR" ]; then
     echo "$(bold "Installing Google API proto files")"
     mkdir -p $THIRD_PARTY_DIR
@@ -31,7 +29,7 @@ install_third_party_protos() {
     curl -L https://raw.githubusercontent.com/googleapis/googleapis/master/google/api/field_behavior.proto > $THIRD_PARTY_DIR/field_behavior.proto
   fi
 
-  OPENAPI_DIR=$INTERNAL_API_FOLDER/include/protoc-gen-openapiv2/options
+  OPENAPI_DIR=$PROTO_DIR/include/protoc-gen-openapiv2/options
   if [ ! -d "$OPENAPI_DIR" ]; then
     echo "$(bold "Installing OpenAPI proto files")"
     mkdir -p $OPENAPI_DIR
@@ -75,14 +73,14 @@ generate_gateway_files() {
   mkdir -p $OPENAPI_OUT
 
   # Generate gRPC-Gateway code
-  protoc --proto_path $INTERNAL_API_FOLDER/ \
-         --proto_path $INTERNAL_API_FOLDER/include \
-         --proto_path $INTERNAL_API_FOLDER/include/internal_api \
+  protoc --proto_path $PROTO_DIR/ \
+         --proto_path $PROTO_DIR/include \
          --grpc-gateway_out=$GATEWAY_OUT/$MODULE \
          --grpc-gateway_opt=logtostderr=true \
          --grpc-gateway_opt=paths=source_relative \
          --openapiv2_out=$OPENAPI_OUT \
          --openapiv2_opt=logtostderr=true \
+         --openapiv2_opt=use_go_templates=true \
          $FILE
          
   echo "Generated gRPC-Gateway files in $GATEWAY_OUT/$MODULE"
@@ -99,8 +97,8 @@ bold() {
 for MODULE in ${MODULES[@]};
 do
   install_third_party_protos
-  check_and_add_imports $MODULE $INTERNAL_API_FOLDER/$MODULE.proto
-  generate_gateway_files $MODULE $INTERNAL_API_FOLDER/$MODULE.proto
+  check_and_add_imports $MODULE $PROTO_DIR/$MODULE.proto
+  generate_gateway_files $MODULE $PROTO_DIR/$MODULE.proto
 done
 
 echo "$(bold "Done generating gRPC-Gateway for: ${MODULES[@]}")"
