@@ -3,7 +3,7 @@
 APP_NAME=superplane
 APP_ENV=prod
 
-test.setup:
+test.setup: openapi.spec.gen
 	docker-compose build
 	docker-compose run --rm app go get ./...
 	-$(MAKE) db.test.create
@@ -55,7 +55,10 @@ db.test.delete:
 #
 
 MODULES := superplane
-GATEWAY_MODULES := superplane
+REST_API_MODULES := superplane
 pb.gen:
 	docker-compose run --rm --no-deps app /app/scripts/protoc.sh $(MODULES)
-	docker-compose run --rm --no-deps app /app/scripts/protoc_gateway.sh $(GATEWAY_MODULES)
+	docker-compose run --rm --no-deps app /app/scripts/protoc_gateway.sh $(REST_API_MODULES)
+
+openapi.spec.gen:
+	DOCKER_DEFAULT_PLATFORM=linux/amd64 docker-compose run --rm --no-deps app /app/scripts/protoc_openapi_spec.sh $(REST_API_MODULES)
