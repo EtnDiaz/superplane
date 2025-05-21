@@ -120,18 +120,6 @@ CREATE TABLE public.stage_event_approvals (
 
 
 --
--- Name: stage_event_tags; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.stage_event_tags (
-    name character varying(64) NOT NULL,
-    value character varying(128) NOT NULL,
-    stage_event_id uuid NOT NULL,
-    state character varying(64) NOT NULL
-);
-
-
---
 -- Name: stage_events; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -177,6 +165,8 @@ CREATE TABLE public.stages (
     canvas_id uuid NOT NULL,
     created_at timestamp without time zone NOT NULL,
     created_by uuid NOT NULL,
+    updated_at timestamp without time zone,
+    updated_by uuid,
     run_template jsonb NOT NULL,
     conditions jsonb,
     use jsonb
@@ -261,14 +251,6 @@ ALTER TABLE ONLY public.stage_event_approvals
 
 ALTER TABLE ONLY public.stage_event_approvals
     ADD CONSTRAINT stage_event_approvals_stage_event_id_approved_by_key UNIQUE (stage_event_id, approved_by);
-
-
---
--- Name: stage_event_tags stage_event_tags_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.stage_event_tags
-    ADD CONSTRAINT stage_event_tags_pkey PRIMARY KEY (name, value, stage_event_id);
 
 
 --
@@ -388,14 +370,6 @@ ALTER TABLE ONLY public.stage_connections
 
 ALTER TABLE ONLY public.stage_event_approvals
     ADD CONSTRAINT stage_event_approvals_stage_event_id_fkey FOREIGN KEY (stage_event_id) REFERENCES public.stage_events(id);
-
-
---
--- Name: stage_event_tags stage_event_tags_stage_event_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.stage_event_tags
-    ADD CONSTRAINT stage_event_tags_stage_event_id_fkey FOREIGN KEY (stage_event_id) REFERENCES public.stage_events(id);
 
 
 --
