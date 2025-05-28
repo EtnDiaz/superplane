@@ -44,9 +44,12 @@ var updateCmd = &cobra.Command{
 				Fail("Invalid Stage YAML: metadata section missing")
 			}
 
-			canvasID, ok := metadata["canvasId"].(string)
+			canvasIDOrName, ok := metadata["canvasId"].(string)
 			if !ok {
-				Fail("Invalid Stage YAML: canvasId field missing")
+				canvasIDOrName, ok = metadata["canvasName"].(string)
+				if !ok {
+					Fail("Invalid Stage YAML: canvasId or canvasName field missing")
+				}
 			}
 
 			stageID, ok := metadata["id"].(string)
@@ -72,7 +75,7 @@ var updateCmd = &cobra.Command{
 			// so we just put something here until we have auth in this API.
 			request.SetRequesterId(uuid.NewString())
 
-			_, _, err = c.StageAPI.SuperplaneUpdateStage(context.Background(), canvasID, stageID).
+			_, _, err = c.StageAPI.SuperplaneUpdateStage(context.Background(), canvasIDOrName, stageID).
 				Body(request).
 				Execute()
 
@@ -87,14 +90,14 @@ var updateCmd = &cobra.Command{
 }
 
 var updateStageCmd = &cobra.Command{
-	Use:   "stage [CANVAS_ID] [STAGE_ID]",
+	Use:   "stage",
 	Short: "Update a stage's configuration",
 	Long:  `Update a stage's configuration, such as its connections.`,
-	Args:  cobra.ExactArgs(2),
+	Args:  cobra.ExactArgs(0),
 
 	Run: func(cmd *cobra.Command, args []string) {
-		canvasID := args[0]
-		stageID := args[1]
+		canvasIDOrName := getOneOrAnotherFlag(cmd, "canvas-id", "canvas-name")
+		stageIDOrName := getOneOrAnotherFlag(cmd, "stage-id", "stage-name")
 		requesterID, _ := cmd.Flags().GetString("requester-id")
 		yamlFile, _ := cmd.Flags().GetString("file")
 
@@ -135,12 +138,12 @@ var updateStageCmd = &cobra.Command{
 		c := DefaultClient()
 		_, _, err = c.StageAPI.SuperplaneUpdateStage(
 			context.Background(),
-			canvasID,
-			stageID,
+			canvasIDOrName,
+			stageIDOrName,
 		).Body(*request).Execute()
 		Check(err)
 
-		fmt.Printf("Stage '%s' updated successfully.\n", stageID)
+		fmt.Printf("Stage '%s' updated successfully.\n", stageIDOrName)
 	},
 }
 
@@ -153,6 +156,10 @@ func init() {
 
 	// Stage command
 	updateCmd.AddCommand(updateStageCmd)
+	updateStageCmd.Flags().String("canvas-id", "", "Canvas ID")
+	updateStageCmd.Flags().String("canvas-name", "", "Canvas name")
+	updateStageCmd.Flags().String("stage-id", "", "Stage ID")
+	updateStageCmd.Flags().String("stage-name", "", "Stage name")
 	updateStageCmd.Flags().String("requester-id", "", "ID of the user updating the stage")
 	updateStageCmd.Flags().StringP("file", "f", "", "File containing stage configuration updates")
 }

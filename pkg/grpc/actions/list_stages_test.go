@@ -21,7 +21,7 @@ func Test__ListStages(t *testing.T) {
 		s, ok := status.FromError(err)
 		assert.True(t, ok)
 		assert.Equal(t, codes.InvalidArgument, s.Code())
-		assert.Contains(t, s.Message(), "invalid UUID")
+		assert.Contains(t, s.Message(), "canvas not found")
 	})
 
 	t.Run("no stages -> empty list", func(t *testing.T) {
@@ -29,7 +29,7 @@ func Test__ListStages(t *testing.T) {
 		require.NoError(t, err)
 
 		res, err := ListStages(context.Background(), &protos.ListStagesRequest{
-			CanvasId: canvas.ID.String(),
+			CanvasIdOrName: canvas.ID.String(),
 		})
 
 		require.NoError(t, err)
@@ -39,7 +39,7 @@ func Test__ListStages(t *testing.T) {
 
 	t.Run("with stage -> list", func(t *testing.T) {
 		res, err := ListStages(context.Background(), &protos.ListStagesRequest{
-			CanvasId: r.Canvas.ID.String(),
+			CanvasIdOrName: r.Canvas.ID.String(),
 		})
 
 		require.NoError(t, err)

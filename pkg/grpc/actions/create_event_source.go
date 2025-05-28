@@ -17,12 +17,14 @@ import (
 )
 
 func CreateEventSource(ctx context.Context, encryptor encryptor.Encryptor, req *pb.CreateEventSourceRequest) (*pb.CreateEventSourceResponse, error) {
-	err := ValidateUUIDs(req.CanvasId)
+	err := ValidateUUIDs(req.CanvasIdOrName)
+	var canvas *models.Canvas
 	if err != nil {
-		return nil, err
+		canvas, err = models.FindCanvasByName(req.CanvasIdOrName)
+	} else {
+		canvas, err = models.FindCanvasByID(req.CanvasIdOrName)
 	}
 
-	canvas, err := models.FindCanvas(req.CanvasId)
 	if err != nil {
 		return nil, status.Errorf(codes.InvalidArgument, "canvas not found")
 	}
