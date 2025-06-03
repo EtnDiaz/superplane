@@ -131,7 +131,10 @@ func startPublicAPI(encryptor encryptor.Encryptor, jwtSigner *jwt.Signer) {
 }
 
 func main() {
-	log.SetFormatter(&log.TextFormatter{TimestampFormat: time.StampMilli})
+	log.SetFormatter(&log.TextFormatter{
+		FullTimestamp:    true,
+		TimestampFormat: time.StampMilli,
+	})
 
 	encryptionKey := os.Getenv("ENCRYPTION_KEY")
 	if encryptionKey == "" {
