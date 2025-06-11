@@ -22,7 +22,7 @@ export const transformEventSourcesToNodes = (
         })[0]
       : null;
     
-    const lastEventTimestamp = new Date(lastEvent?.createdAt || '').toLocaleString() || 'n/a';
+    const lastEventTimestamp = lastEvent?.createdAt ? new Date(lastEvent.createdAt).toLocaleString() : 'n/a';
     
     return ({
       id: es.metadata?.id || '',
@@ -75,12 +75,11 @@ export const transformToEdges = (
 ): EdgeType[] => {
   return stages.flatMap((st) =>
     (st.spec?.connections || []).map((conn) => {
-      const isEvent = eventSources.some((es) => es.metadata?.name === conn.name);
       const sourceObj =
         eventSources.find((es) => es.metadata?.name === conn.name) ||
         stages.find((s) => s.metadata?.name === conn.name);
       const sourceId = sourceObj?.metadata?.id ?? conn.name;
-      const strokeColor = isEvent ? '#FF0000' : '#000000';
+      const strokeColor = '#000000';
       return { 
         id: `e-${conn.name}-${st.metadata?.id}`, 
         source: sourceId, 
