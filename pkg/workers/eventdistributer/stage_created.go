@@ -33,7 +33,7 @@ func HandleStageCreated(messageBody []byte, wsHub *ws.Hub) error {
 
 	// Convert protobuf to a more websocket-friendly format with complete information
 	wsEvent := map[string]interface{}{
-		"event": "stage_added",
+		"event":   "stage_added",
 		"payload": describeStageResp.Stage,
 	}
 
