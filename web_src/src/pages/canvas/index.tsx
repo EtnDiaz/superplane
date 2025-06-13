@@ -1,4 +1,4 @@
-import { StrictMode, useEffect, useState } from "react";
+import { StrictMode, useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import { FlowRenderer } from "./components/FlowRenderer";
 import { useCanvasStore } from "./store/canvasStore";
@@ -12,11 +12,13 @@ import { Sidebar } from "./components/SideBar";
 export function Canvas() {
   // Get the canvas ID from the URL params
   const { id } = useParams<{ id: string }>();
-  const { initialize, selectedStage, cleanSelectedStage, approveStageEvent } = useCanvasStore();
+  const { initialize, selectedStageId, cleanSelectedStageId, stages, approveStageEvent } = useCanvasStore();
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   // Custom hook for setting up event handlers - must be called at top level
   useWebsocketEvents(id!);
+
+  const selectedStage = useMemo(() => stages.find(stage => stage.metadata!.id === selectedStageId), [stages, selectedStageId]);
 
   useEffect(() => {
     // Return early if no ID is available
@@ -63,7 +65,7 @@ export function Canvas() {
         const mappedStages = stagesResponse.data?.stages || [];
         
         // Collect all events from all stages
-        const allEvents: SuperplaneStageEvent[] = [];
+        const allEvents: Record<string, SuperplaneStageEvent> = {};
         const stagesWithQueues: StageWithEventQueue[] = [];
 
         // Fetch events for each stage
@@ -75,7 +77,9 @@ export function Canvas() {
           const stageEvents = stageEventsResponse.data?.events || [];
           
           // Add events to the collection
-          allEvents.push(...stageEvents);
+          for (const event of stageEvents) {
+            allEvents[event.id!] = event;
+          }
 
           stagesWithQueues.push({
             ...stage,
@@ -84,7 +88,7 @@ export function Canvas() {
         }
 
         // Group events by source ID
-        const eventsBySourceId = allEvents.reduce((acc, event) => {
+        const eventsBySourceId = Object.values(allEvents).reduce((acc, event) => {
           const sourceId = event.sourceId;
           if (sourceId) {
             if (!acc[sourceId]) {
@@ -135,7 +139,7 @@ export function Canvas() {
   return (
     <StrictMode>
       <FlowRenderer />
-      {selectedStage && <Sidebar approveStageEvent={approveStageEvent} selectedStage={selectedStage} onClose={() => cleanSelectedStage()} />}
+      {selectedStage && <Sidebar approveStageEvent={approveStageEvent} selectedStage={selectedStage} onClose={() => cleanSelectedStageId()} />}
     </StrictMode>
   );
 }
