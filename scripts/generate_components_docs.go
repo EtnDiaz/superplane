@@ -289,6 +289,8 @@ func sanitizeHTMLTags(content string) string {
 		for i := range parts {
 			if i%2 == 0 {
 				parts[i] = htmlTagRe.ReplaceAllString(parts[i], "&lt;$1&gt;")
+				parts[i] = strings.ReplaceAll(parts[i], "{", "&lbrace;")
+				parts[i] = strings.ReplaceAll(parts[i], "}", "&rbrace;")
 			}
 		}
 		result = append(result, strings.Join(parts, "`"))
