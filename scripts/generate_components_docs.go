@@ -93,13 +93,13 @@ func writeIntegrationIndex(
 	var buf bytes.Buffer
 	writeFrontMatter(&buf, integration.Label(), nil)
 
-	writeOverviewSection(&buf, integration.Description())
+	writeOverviewSection(&buf, sanitizeHTMLTags(integration.Description()))
 	writeCardGridTriggers(&buf, triggers)
 	writeCardGridComponents(&buf, components)
 
 	if instructions := strings.TrimSpace(integration.Instructions()); instructions != "" {
 		buf.WriteString("## Instructions\n\n")
-		buf.WriteString(instructions)
+		buf.WriteString(sanitizeHTMLTags(instructions))
 		buf.WriteString("\n\n")
 	}
 
@@ -205,7 +205,7 @@ func writeParagraph(buf *bytes.Buffer, text string) {
 	if trimmed == "" {
 		return
 	}
-	buf.WriteString(trimmed)
+	buf.WriteString(sanitizeHTMLTags(trimmed))
 	buf.WriteString("\n\n")
 }
 
@@ -264,6 +264,37 @@ func writeExampleSection(title string, data map[string]any, buf *bytes.Buffer) {
 
 func writeFile(path string, data []byte) error {
 	return os.WriteFile(path, data, 0o644)
+}
+
+var htmlTagRe = regexp.MustCompile(`<([a-zA-Z/][^>]*)>`)
+
+func sanitizeHTMLTags(content string) string {
+	lines := strings.Split(content, "\n")
+	inCodeBlock := false
+	var result []string
+
+	for _, line := range lines {
+		if strings.HasPrefix(strings.TrimSpace(line), "```") {
+			inCodeBlock = !inCodeBlock
+			result = append(result, line)
+			continue
+		}
+
+		if inCodeBlock {
+			result = append(result, line)
+			continue
+		}
+
+		parts := strings.Split(line, "`")
+		for i := range parts {
+			if i%2 == 0 {
+				parts[i] = htmlTagRe.ReplaceAllString(parts[i], "&lt;$1&gt;")
+			}
+		}
+		result = append(result, strings.Join(parts, "`"))
+	}
+
+	return strings.Join(result, "\n")
 }
 
 func slugify(value string) string {
