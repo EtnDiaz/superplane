@@ -92,6 +92,8 @@ SuperPlane integrates with the tools you already use. Each integration provides 
 <td align="center" width="150"><a href="https://docs.superplane.com/components/aws/#code-artifact-•-on-package-version" target="_blank"><img width="40" src="https://raw.githubusercontent.com/superplanehq/superplane/main/web_src/src/assets/icons/integrations/aws.codeartifact.svg" alt="AWS CodeArtifact"/><br/>AWS CodeArtifact</a></td>
 <td align="center" width="150"><a href="https://docs.superplane.com/components/aws/#cloud-watch-•-on-alarm" target="_blank"><img width="40" src="https://raw.githubusercontent.com/superplanehq/superplane/main/web_src/src/assets/icons/integrations/aws.cloudwatch.svg" alt="AWS CloudWatch"/><br/>AWS CloudWatch</a></td>
 <td align="center" width="150"><a href="https://docs.superplane.com/components/aws/#sns-•-on-topic-message" target="_blank"><img width="40" src="https://raw.githubusercontent.com/superplanehq/superplane/main/web_src/src/assets/icons/integrations/aws.sns.svg" alt="AWS SNS"/><br/>AWS SNS</a></td>
+</tr>
+<tr>
 <td align="center" width="150"><a href="https://docs.superplane.com/components/cloudflare/" target="_blank"><img width="40" src="https://raw.githubusercontent.com/superplanehq/superplane/main/web_src/src/assets/icons/integrations/cloudflare.svg" alt="Cloudflare"/><br/>Cloudflare</a></td>
 <td align="center" width="150"><a href="https://docs.superplane.com/components/digitalocean/" target="_blank"><img width="40" src="https://raw.githubusercontent.com/superplanehq/superplane/main/web_src/src/assets/icons/integrations/digitalocean.svg" alt="DigitalOcean"/><br/>DigitalOcean</a></td>
 <td align="center" width="150"><a href="https://docs.superplane.com/components/dockerhub/" target="_blank"><img width="40" src="https://raw.githubusercontent.com/superplanehq/superplane/main/web_src/src/assets/icons/integrations/docker.svg" alt="DockerHub"/><br/>DockerHub</a></td>
@@ -108,7 +110,6 @@ SuperPlane integrates with the tools you already use. Each integration provides 
 <td align="center" width="150"><a href="https://docs.superplane.com/components/dash0/" target="_blank"><img width="40" src="https://raw.githubusercontent.com/superplanehq/superplane/main/web_src/src/assets/icons/integrations/dash0.svg" alt="Dash0"/><br/>Dash0</a></td>
 <td align="center" width="150"><a href="https://docs.superplane.com/components/grafana/" target="_blank"><img width="40" src="https://raw.githubusercontent.com/superplanehq/superplane/main/web_src/src/assets/icons/integrations/grafana.svg" alt="Grafana"/><br/>Grafana</a></td>
 <td align="center" width="150"><a href="https://docs.superplane.com/components/prometheus/" target="_blank"><img width="40" src="https://raw.githubusercontent.com/superplanehq/superplane/main/web_src/src/assets/icons/integrations/prometheus.svg" alt="Prometheus"/><br/>Prometheus</a></td>
-<td align="center" width="150"><a href="https://docs.superplane.com/components/statuspage/" target="_blank"><img width="40" src="https://raw.githubusercontent.com/superplanehq/superplane/main/web_src/src/assets/icons/integrations/statuspage.svg" alt="Statuspage"/><br/>Statuspage</a></td>
 </tr>
 </table>
 
@@ -118,6 +119,7 @@ SuperPlane integrates with the tools you already use. Each integration provides 
 <tr>
 <td align="center" width="150"><a href="https://docs.superplane.com/components/pagerduty/" target="_blank"><img width="40" src="https://raw.githubusercontent.com/superplanehq/superplane/main/web_src/src/assets/icons/integrations/pagerduty.svg" alt="PagerDuty"/><br/>PagerDuty</a></td>
 <td align="center" width="150"><a href="https://docs.superplane.com/components/rootly/" target="_blank"><img width="40" src="https://raw.githubusercontent.com/superplanehq/superplane/main/web_src/src/assets/icons/integrations/rootly.svg" alt="Rootly"/><br/>Rootly</a></td>
+<td align="center" width="150"><a href="https://docs.superplane.com/components/statuspage/" target="_blank"><img width="40" src="https://raw.githubusercontent.com/superplanehq/superplane/main/web_src/src/assets/icons/integrations/statuspage.svg" alt="Statuspage"/><br/>Statuspage</a></td>
 </tr>
 </table>
 
