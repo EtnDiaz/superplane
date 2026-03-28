@@ -10,6 +10,7 @@ import (
 	"net/http/httputil"
 	"net/url"
 	"os"
+	"os/exec"
 	"strconv"
 	"strings"
 	"time"
@@ -282,6 +283,9 @@ func (s *Server) RegisterGRPCGateway(grpcServerAddr string) error {
 	s.Router.PathPrefix("/api/v1/service-accounts").Handler(protectedGRPCHandler)
 	s.Router.PathPrefix("/api/v1/agents").Handler(protectedGRPCHandler)
 	s.Router.PathPrefix("/api/v1/workflows").Handler(protectedGRPCHandler)
+
+	orgAuthMiddleware(http.HandlerFunc(s.sandboxStatus))
+	s.Router.Handle("/api/v1/sandbox/status", orgAuthMiddleware(http.HandlerFunc(s.sandboxStatus))).Methods("GET")
 
 	return nil
 }
@@ -1199,4 +1203,52 @@ func getBaseURL() string {
 		baseURL = fmt.Sprintf("http://localhost:%s", port)
 	}
 	return baseURL
+}
+
+type sandboxProviderStatus struct {
+	Available bool   `json:"available"`
+	Reason    string `json:"reason,omitempty"`
+}
+
+type sandboxStatusResponse struct {
+	Providers map[string]sandboxProviderStatus `json:"providers"`
+}
+
+func (s *Server) sandboxStatus(w http.ResponseWriter, _ *http.Request) {
+	resp := sandboxStatusResponse{
+		Providers: map[string]sandboxProviderStatus{
+			"docker":     checkDockerProvider(),
+			"gvisor":     checkGVisorProvider(),
+			"cloudflare": {Available: false, Reason: "requires Bridge Worker URL and auth token configured per canvas"},
+		},
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(resp)
+}
+
+func checkDockerProvider() sandboxProviderStatus {
+	cmd := exec.Command("docker", "info")
+	if err := cmd.Run(); err != nil {
+		return sandboxProviderStatus{Available: false, Reason: "Docker is not running or not accessible"}
+	}
+	return sandboxProviderStatus{Available: true}
+}
+
+func checkGVisorProvider() sandboxProviderStatus {
+	cmd := exec.Command("docker", "info")
+	if err := cmd.Run(); err != nil {
+		return sandboxProviderStatus{Available: false, Reason: "Docker is not running or not accessible"}
+	}
+
+	out, err := exec.Command("docker", "info", "--format", "{{json .Runtimes}}").Output()
+	if err != nil {
+		return sandboxProviderStatus{Available: false, Reason: "could not inspect Docker runtimes"}
+	}
+
+	if !strings.Contains(string(out), "runsc") {
+		return sandboxProviderStatus{Available: false, Reason: "gVisor runtime (runsc) not found — install from gvisor.dev"}
+	}
+
+	return sandboxProviderStatus{Available: true}
 }
