@@ -20,10 +20,13 @@ var _ MappedNullable = &CanvasesUpdateCanvasBody{}
 
 // CanvasesUpdateCanvasBody struct for CanvasesUpdateCanvasBody
 type CanvasesUpdateCanvasBody struct {
-	Name                        *string                                    `json:"name,omitempty"`
-	Description                 *string                                    `json:"description,omitempty"`
-	VersioningEnabled           *bool                                      `json:"versioningEnabled,omitempty"`
+	Name *string `json:"name,omitempty"`
+	Description *string `json:"description,omitempty"`
+	VersioningEnabled *bool `json:"versioningEnabled,omitempty"`
 	ChangeRequestApprovalConfig *CanvasesCanvasChangeRequestApprovalConfig `json:"changeRequestApprovalConfig,omitempty"`
+	SandboxProvider *string `json:"sandboxProvider,omitempty"`
+	SandboxCfBridgeUrl *string `json:"sandboxCfBridgeUrl,omitempty"`
+	SandboxCfAuthToken *string `json:"sandboxCfAuthToken,omitempty"`
 }
 
 // NewCanvasesUpdateCanvasBody instantiates a new CanvasesUpdateCanvasBody object
@@ -171,8 +174,104 @@ func (o *CanvasesUpdateCanvasBody) SetChangeRequestApprovalConfig(v CanvasesCanv
 	o.ChangeRequestApprovalConfig = &v
 }
 
+// GetSandboxProvider returns the SandboxProvider field value if set, zero value otherwise.
+func (o *CanvasesUpdateCanvasBody) GetSandboxProvider() string {
+	if o == nil || IsNil(o.SandboxProvider) {
+		var ret string
+		return ret
+	}
+	return *o.SandboxProvider
+}
+
+// GetSandboxProviderOk returns a tuple with the SandboxProvider field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CanvasesUpdateCanvasBody) GetSandboxProviderOk() (*string, bool) {
+	if o == nil || IsNil(o.SandboxProvider) {
+		return nil, false
+	}
+	return o.SandboxProvider, true
+}
+
+// HasSandboxProvider returns a boolean if a field has been set.
+func (o *CanvasesUpdateCanvasBody) HasSandboxProvider() bool {
+	if o != nil && !IsNil(o.SandboxProvider) {
+		return true
+	}
+
+	return false
+}
+
+// SetSandboxProvider gets a reference to the given string and assigns it to the SandboxProvider field.
+func (o *CanvasesUpdateCanvasBody) SetSandboxProvider(v string) {
+	o.SandboxProvider = &v
+}
+
+// GetSandboxCfBridgeUrl returns the SandboxCfBridgeUrl field value if set, zero value otherwise.
+func (o *CanvasesUpdateCanvasBody) GetSandboxCfBridgeUrl() string {
+	if o == nil || IsNil(o.SandboxCfBridgeUrl) {
+		var ret string
+		return ret
+	}
+	return *o.SandboxCfBridgeUrl
+}
+
+// GetSandboxCfBridgeUrlOk returns a tuple with the SandboxCfBridgeUrl field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CanvasesUpdateCanvasBody) GetSandboxCfBridgeUrlOk() (*string, bool) {
+	if o == nil || IsNil(o.SandboxCfBridgeUrl) {
+		return nil, false
+	}
+	return o.SandboxCfBridgeUrl, true
+}
+
+// HasSandboxCfBridgeUrl returns a boolean if a field has been set.
+func (o *CanvasesUpdateCanvasBody) HasSandboxCfBridgeUrl() bool {
+	if o != nil && !IsNil(o.SandboxCfBridgeUrl) {
+		return true
+	}
+
+	return false
+}
+
+// SetSandboxCfBridgeUrl gets a reference to the given string and assigns it to the SandboxCfBridgeUrl field.
+func (o *CanvasesUpdateCanvasBody) SetSandboxCfBridgeUrl(v string) {
+	o.SandboxCfBridgeUrl = &v
+}
+
+// GetSandboxCfAuthToken returns the SandboxCfAuthToken field value if set, zero value otherwise.
+func (o *CanvasesUpdateCanvasBody) GetSandboxCfAuthToken() string {
+	if o == nil || IsNil(o.SandboxCfAuthToken) {
+		var ret string
+		return ret
+	}
+	return *o.SandboxCfAuthToken
+}
+
+// GetSandboxCfAuthTokenOk returns a tuple with the SandboxCfAuthToken field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CanvasesUpdateCanvasBody) GetSandboxCfAuthTokenOk() (*string, bool) {
+	if o == nil || IsNil(o.SandboxCfAuthToken) {
+		return nil, false
+	}
+	return o.SandboxCfAuthToken, true
+}
+
+// HasSandboxCfAuthToken returns a boolean if a field has been set.
+func (o *CanvasesUpdateCanvasBody) HasSandboxCfAuthToken() bool {
+	if o != nil && !IsNil(o.SandboxCfAuthToken) {
+		return true
+	}
+
+	return false
+}
+
+// SetSandboxCfAuthToken gets a reference to the given string and assigns it to the SandboxCfAuthToken field.
+func (o *CanvasesUpdateCanvasBody) SetSandboxCfAuthToken(v string) {
+	o.SandboxCfAuthToken = &v
+}
+
 func (o CanvasesUpdateCanvasBody) MarshalJSON() ([]byte, error) {
-	toSerialize, err := o.ToMap()
+	toSerialize,err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
 	}
@@ -192,6 +291,15 @@ func (o CanvasesUpdateCanvasBody) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.ChangeRequestApprovalConfig) {
 		toSerialize["changeRequestApprovalConfig"] = o.ChangeRequestApprovalConfig
+	}
+	if !IsNil(o.SandboxProvider) {
+		toSerialize["sandboxProvider"] = o.SandboxProvider
+	}
+	if !IsNil(o.SandboxCfBridgeUrl) {
+		toSerialize["sandboxCfBridgeUrl"] = o.SandboxCfBridgeUrl
+	}
+	if !IsNil(o.SandboxCfAuthToken) {
+		toSerialize["sandboxCfAuthToken"] = o.SandboxCfAuthToken
 	}
 	return toSerialize, nil
 }
@@ -231,3 +339,5 @@ func (v *NullableCanvasesUpdateCanvasBody) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
+
+

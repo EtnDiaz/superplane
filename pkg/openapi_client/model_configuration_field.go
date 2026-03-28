@@ -20,18 +20,18 @@ var _ MappedNullable = &ConfigurationField{}
 
 // ConfigurationField struct for ConfigurationField
 type ConfigurationField struct {
-	Name                 *string                            `json:"name,omitempty"`
-	Type                 *string                            `json:"type,omitempty"`
-	Description          *string                            `json:"description,omitempty"`
-	Required             *bool                              `json:"required,omitempty"`
-	DefaultValue         *string                            `json:"defaultValue,omitempty"`
-	Label                *string                            `json:"label,omitempty"`
+	Name *string `json:"name,omitempty"`
+	Type *string `json:"type,omitempty"`
+	Description *string `json:"description,omitempty"`
+	Required *bool `json:"required,omitempty"`
+	DefaultValue *string `json:"defaultValue,omitempty"`
+	Label *string `json:"label,omitempty"`
 	VisibilityConditions []ConfigurationVisibilityCondition `json:"visibilityConditions,omitempty"`
-	TypeOptions          *ConfigurationTypeOptions          `json:"typeOptions,omitempty"`
-	RequiredConditions   []ConfigurationRequiredCondition   `json:"requiredConditions,omitempty"`
-	Placeholder          *string                            `json:"placeholder,omitempty"`
-	Sensitive            *bool                              `json:"sensitive,omitempty"`
-	Togglable            *bool                              `json:"togglable,omitempty"`
+	TypeOptions *ConfigurationTypeOptions `json:"typeOptions,omitempty"`
+	RequiredConditions []ConfigurationRequiredCondition `json:"requiredConditions,omitempty"`
+	Placeholder *string `json:"placeholder,omitempty"`
+	Sensitive *bool `json:"sensitive,omitempty"`
+	Togglable *bool `json:"togglable,omitempty"`
 }
 
 // NewConfigurationField instantiates a new ConfigurationField object
@@ -436,7 +436,7 @@ func (o *ConfigurationField) SetTogglable(v bool) {
 }
 
 func (o ConfigurationField) MarshalJSON() ([]byte, error) {
-	toSerialize, err := o.ToMap()
+	toSerialize,err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
 	}
@@ -519,3 +519,5 @@ func (v *NullableConfigurationField) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
+
+

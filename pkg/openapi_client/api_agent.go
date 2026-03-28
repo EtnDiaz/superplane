@@ -20,13 +20,14 @@ import (
 	"strings"
 )
 
+
 // AgentAPIService AgentAPI service
 type AgentAPIService service
 
 type ApiAgentsCreateAgentChatRequest struct {
-	ctx        context.Context
+	ctx context.Context
 	ApiService *AgentAPIService
-	body       *AgentsCreateAgentChatRequest
+	body *AgentsCreateAgentChatRequest
 }
 
 func (r ApiAgentsCreateAgentChatRequest) Body(body AgentsCreateAgentChatRequest) ApiAgentsCreateAgentChatRequest {
@@ -43,25 +44,24 @@ AgentsCreateAgentChat Creates a new agent chat
 
 Create a new agent chat. The response includes the URL and token for initiating the chat stream
 
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiAgentsCreateAgentChatRequest
+ @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ @return ApiAgentsCreateAgentChatRequest
 */
 func (a *AgentAPIService) AgentsCreateAgentChat(ctx context.Context) ApiAgentsCreateAgentChatRequest {
 	return ApiAgentsCreateAgentChatRequest{
 		ApiService: a,
-		ctx:        ctx,
+		ctx: ctx,
 	}
 }
 
 // Execute executes the request
-//
-//	@return AgentsCreateAgentChatResponse
+//  @return AgentsCreateAgentChatResponse
 func (a *AgentAPIService) AgentsCreateAgentChatExecute(r ApiAgentsCreateAgentChatRequest) (*AgentsCreateAgentChatResponse, *http.Response, error) {
 	var (
-		localVarHTTPMethod  = http.MethodPost
-		localVarPostBody    interface{}
-		formFiles           []formFile
-		localVarReturnValue *AgentsCreateAgentChatResponse
+		localVarHTTPMethod   = http.MethodPost
+		localVarPostBody     interface{}
+		formFiles            []formFile
+		localVarReturnValue  *AgentsCreateAgentChatResponse
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AgentAPIService.AgentsCreateAgentChat")
@@ -119,14 +119,14 @@ func (a *AgentAPIService) AgentsCreateAgentChatExecute(r ApiAgentsCreateAgentCha
 			body:  localVarBody,
 			error: localVarHTTPResponse.Status,
 		}
-		var v GooglerpcStatus
-		err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-		if err != nil {
-			newErr.error = err.Error()
-			return localVarReturnValue, localVarHTTPResponse, newErr
-		}
-		newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-		newErr.model = v
+			var v GooglerpcStatus
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
 
@@ -143,10 +143,10 @@ func (a *AgentAPIService) AgentsCreateAgentChatExecute(r ApiAgentsCreateAgentCha
 }
 
 type ApiAgentsDescribeAgentChatRequest struct {
-	ctx        context.Context
+	ctx context.Context
 	ApiService *AgentAPIService
-	chatId     string
-	canvasId   *string
+	chatId string
+	canvasId *string
 }
 
 func (r ApiAgentsDescribeAgentChatRequest) CanvasId(canvasId string) ApiAgentsDescribeAgentChatRequest {
@@ -163,27 +163,26 @@ AgentsDescribeAgentChat Describes an agent chat for the authenticated user
 
 Describes an agent chat for the authenticated user
 
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param chatId
-	@return ApiAgentsDescribeAgentChatRequest
+ @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ @param chatId
+ @return ApiAgentsDescribeAgentChatRequest
 */
 func (a *AgentAPIService) AgentsDescribeAgentChat(ctx context.Context, chatId string) ApiAgentsDescribeAgentChatRequest {
 	return ApiAgentsDescribeAgentChatRequest{
 		ApiService: a,
-		ctx:        ctx,
-		chatId:     chatId,
+		ctx: ctx,
+		chatId: chatId,
 	}
 }
 
 // Execute executes the request
-//
-//	@return AgentsDescribeAgentChatResponse
+//  @return AgentsDescribeAgentChatResponse
 func (a *AgentAPIService) AgentsDescribeAgentChatExecute(r ApiAgentsDescribeAgentChatRequest) (*AgentsDescribeAgentChatResponse, *http.Response, error) {
 	var (
-		localVarHTTPMethod  = http.MethodGet
-		localVarPostBody    interface{}
-		formFiles           []formFile
-		localVarReturnValue *AgentsDescribeAgentChatResponse
+		localVarHTTPMethod   = http.MethodGet
+		localVarPostBody     interface{}
+		formFiles            []formFile
+		localVarReturnValue  *AgentsDescribeAgentChatResponse
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AgentAPIService.AgentsDescribeAgentChat")
@@ -240,14 +239,14 @@ func (a *AgentAPIService) AgentsDescribeAgentChatExecute(r ApiAgentsDescribeAgen
 			body:  localVarBody,
 			error: localVarHTTPResponse.Status,
 		}
-		var v GooglerpcStatus
-		err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-		if err != nil {
-			newErr.error = err.Error()
-			return localVarReturnValue, localVarHTTPResponse, newErr
-		}
-		newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-		newErr.model = v
+			var v GooglerpcStatus
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
 
@@ -264,10 +263,10 @@ func (a *AgentAPIService) AgentsDescribeAgentChatExecute(r ApiAgentsDescribeAgen
 }
 
 type ApiAgentsListAgentChatMessagesRequest struct {
-	ctx        context.Context
+	ctx context.Context
 	ApiService *AgentAPIService
-	chatId     string
-	canvasId   *string
+	chatId string
+	canvasId *string
 }
 
 func (r ApiAgentsListAgentChatMessagesRequest) CanvasId(canvasId string) ApiAgentsListAgentChatMessagesRequest {
@@ -284,27 +283,26 @@ AgentsListAgentChatMessages List the messages in an agent chat
 
 List the messages in an agent chat
 
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param chatId
-	@return ApiAgentsListAgentChatMessagesRequest
+ @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ @param chatId
+ @return ApiAgentsListAgentChatMessagesRequest
 */
 func (a *AgentAPIService) AgentsListAgentChatMessages(ctx context.Context, chatId string) ApiAgentsListAgentChatMessagesRequest {
 	return ApiAgentsListAgentChatMessagesRequest{
 		ApiService: a,
-		ctx:        ctx,
-		chatId:     chatId,
+		ctx: ctx,
+		chatId: chatId,
 	}
 }
 
 // Execute executes the request
-//
-//	@return AgentsListAgentChatMessagesResponse
+//  @return AgentsListAgentChatMessagesResponse
 func (a *AgentAPIService) AgentsListAgentChatMessagesExecute(r ApiAgentsListAgentChatMessagesRequest) (*AgentsListAgentChatMessagesResponse, *http.Response, error) {
 	var (
-		localVarHTTPMethod  = http.MethodGet
-		localVarPostBody    interface{}
-		formFiles           []formFile
-		localVarReturnValue *AgentsListAgentChatMessagesResponse
+		localVarHTTPMethod   = http.MethodGet
+		localVarPostBody     interface{}
+		formFiles            []formFile
+		localVarReturnValue  *AgentsListAgentChatMessagesResponse
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AgentAPIService.AgentsListAgentChatMessages")
@@ -361,14 +359,14 @@ func (a *AgentAPIService) AgentsListAgentChatMessagesExecute(r ApiAgentsListAgen
 			body:  localVarBody,
 			error: localVarHTTPResponse.Status,
 		}
-		var v GooglerpcStatus
-		err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-		if err != nil {
-			newErr.error = err.Error()
-			return localVarReturnValue, localVarHTTPResponse, newErr
-		}
-		newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-		newErr.model = v
+			var v GooglerpcStatus
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
 
@@ -385,9 +383,9 @@ func (a *AgentAPIService) AgentsListAgentChatMessagesExecute(r ApiAgentsListAgen
 }
 
 type ApiAgentsListAgentChatsRequest struct {
-	ctx        context.Context
+	ctx context.Context
 	ApiService *AgentAPIService
-	canvasId   *string
+	canvasId *string
 }
 
 func (r ApiAgentsListAgentChatsRequest) CanvasId(canvasId string) ApiAgentsListAgentChatsRequest {
@@ -404,25 +402,24 @@ AgentsListAgentChats List agent chats for the authenticated user
 
 Returns a list of agent chats for the authenticated user
 
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiAgentsListAgentChatsRequest
+ @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ @return ApiAgentsListAgentChatsRequest
 */
 func (a *AgentAPIService) AgentsListAgentChats(ctx context.Context) ApiAgentsListAgentChatsRequest {
 	return ApiAgentsListAgentChatsRequest{
 		ApiService: a,
-		ctx:        ctx,
+		ctx: ctx,
 	}
 }
 
 // Execute executes the request
-//
-//	@return AgentsListAgentChatsResponse
+//  @return AgentsListAgentChatsResponse
 func (a *AgentAPIService) AgentsListAgentChatsExecute(r ApiAgentsListAgentChatsRequest) (*AgentsListAgentChatsResponse, *http.Response, error) {
 	var (
-		localVarHTTPMethod  = http.MethodGet
-		localVarPostBody    interface{}
-		formFiles           []formFile
-		localVarReturnValue *AgentsListAgentChatsResponse
+		localVarHTTPMethod   = http.MethodGet
+		localVarPostBody     interface{}
+		formFiles            []formFile
+		localVarReturnValue  *AgentsListAgentChatsResponse
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AgentAPIService.AgentsListAgentChats")
@@ -478,14 +475,14 @@ func (a *AgentAPIService) AgentsListAgentChatsExecute(r ApiAgentsListAgentChatsR
 			body:  localVarBody,
 			error: localVarHTTPResponse.Status,
 		}
-		var v GooglerpcStatus
-		err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-		if err != nil {
-			newErr.error = err.Error()
-			return localVarReturnValue, localVarHTTPResponse, newErr
-		}
-		newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-		newErr.model = v
+			var v GooglerpcStatus
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
 
@@ -502,10 +499,10 @@ func (a *AgentAPIService) AgentsListAgentChatsExecute(r ApiAgentsListAgentChatsR
 }
 
 type ApiAgentsResumeAgentChatRequest struct {
-	ctx        context.Context
+	ctx context.Context
 	ApiService *AgentAPIService
-	chatId     string
-	body       *AgentsResumeAgentChatBody
+	chatId string
+	body *AgentsResumeAgentChatBody
 }
 
 func (r ApiAgentsResumeAgentChatRequest) Body(body AgentsResumeAgentChatBody) ApiAgentsResumeAgentChatRequest {
@@ -522,27 +519,26 @@ AgentsResumeAgentChat Resume an agent chat
 
 Resumes an agent chat. The response includes the URL and token for resuming the chat
 
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param chatId
-	@return ApiAgentsResumeAgentChatRequest
+ @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ @param chatId
+ @return ApiAgentsResumeAgentChatRequest
 */
 func (a *AgentAPIService) AgentsResumeAgentChat(ctx context.Context, chatId string) ApiAgentsResumeAgentChatRequest {
 	return ApiAgentsResumeAgentChatRequest{
 		ApiService: a,
-		ctx:        ctx,
-		chatId:     chatId,
+		ctx: ctx,
+		chatId: chatId,
 	}
 }
 
 // Execute executes the request
-//
-//	@return AgentsResumeAgentChatResponse
+//  @return AgentsResumeAgentChatResponse
 func (a *AgentAPIService) AgentsResumeAgentChatExecute(r ApiAgentsResumeAgentChatRequest) (*AgentsResumeAgentChatResponse, *http.Response, error) {
 	var (
-		localVarHTTPMethod  = http.MethodPost
-		localVarPostBody    interface{}
-		formFiles           []formFile
-		localVarReturnValue *AgentsResumeAgentChatResponse
+		localVarHTTPMethod   = http.MethodPost
+		localVarPostBody     interface{}
+		formFiles            []formFile
+		localVarReturnValue  *AgentsResumeAgentChatResponse
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AgentAPIService.AgentsResumeAgentChat")
@@ -601,14 +597,14 @@ func (a *AgentAPIService) AgentsResumeAgentChatExecute(r ApiAgentsResumeAgentCha
 			body:  localVarBody,
 			error: localVarHTTPResponse.Status,
 		}
-		var v GooglerpcStatus
-		err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-		if err != nil {
-			newErr.error = err.Error()
-			return localVarReturnValue, localVarHTTPResponse, newErr
-		}
-		newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-		newErr.model = v
+			var v GooglerpcStatus
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
 

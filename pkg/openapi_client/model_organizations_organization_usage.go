@@ -21,10 +21,10 @@ var _ MappedNullable = &OrganizationsOrganizationUsage{}
 
 // OrganizationsOrganizationUsage struct for OrganizationsOrganizationUsage
 type OrganizationsOrganizationUsage struct {
-	Canvases                  *int32     `json:"canvases,omitempty"`
-	EventBucketLevel          *float64   `json:"eventBucketLevel,omitempty"`
-	EventBucketCapacity       *float64   `json:"eventBucketCapacity,omitempty"`
-	EventBucketLastUpdatedAt  *time.Time `json:"eventBucketLastUpdatedAt,omitempty"`
+	Canvases *int32 `json:"canvases,omitempty"`
+	EventBucketLevel *float64 `json:"eventBucketLevel,omitempty"`
+	EventBucketCapacity *float64 `json:"eventBucketCapacity,omitempty"`
+	EventBucketLastUpdatedAt *time.Time `json:"eventBucketLastUpdatedAt,omitempty"`
 	NextEventBucketDecreaseAt *time.Time `json:"nextEventBucketDecreaseAt,omitempty"`
 }
 
@@ -206,7 +206,7 @@ func (o *OrganizationsOrganizationUsage) SetNextEventBucketDecreaseAt(v time.Tim
 }
 
 func (o OrganizationsOrganizationUsage) MarshalJSON() ([]byte, error) {
-	toSerialize, err := o.ToMap()
+	toSerialize,err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
 	}
@@ -268,3 +268,5 @@ func (v *NullableOrganizationsOrganizationUsage) UnmarshalJSON(src []byte) error
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
+
+

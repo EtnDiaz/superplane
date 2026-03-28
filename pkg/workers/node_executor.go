@@ -411,7 +411,11 @@ func (w *NodeExecutor) executeComponentNode(tx *gorm.DB, execution *models.Canva
 
 	ctx.Logger = logger
 
-	wrapped := sandbox.Wrap(component, workflow.SandboxProvider, sandbox.CloudflareConfig{})
+	canvasSandboxProvider := workflow.SandboxProvider
+	if component.Name() == "sandbox" {
+		canvasSandboxProvider = sandbox.ProviderNone
+	}
+	wrapped := sandbox.Wrap(component, canvasSandboxProvider, sandbox.CloudflareConfig{})
 	if err := wrapped.Execute(ctx); err != nil {
 		logger.Errorf("failed to execute component: %v", err)
 		err = execution.FailInTransaction(tx, models.CanvasNodeExecutionResultReasonError, err.Error())

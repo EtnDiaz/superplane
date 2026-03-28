@@ -21,7 +21,7 @@ var _ MappedNullable = &AgentsCreateAgentChatResponse{}
 // AgentsCreateAgentChatResponse struct for AgentsCreateAgentChatResponse
 type AgentsCreateAgentChatResponse struct {
 	Token *string `json:"token,omitempty"`
-	Url   *string `json:"url,omitempty"`
+	Url *string `json:"url,omitempty"`
 }
 
 // NewAgentsCreateAgentChatResponse instantiates a new AgentsCreateAgentChatResponse object
@@ -106,7 +106,7 @@ func (o *AgentsCreateAgentChatResponse) SetUrl(v string) {
 }
 
 func (o AgentsCreateAgentChatResponse) MarshalJSON() ([]byte, error) {
-	toSerialize, err := o.ToMap()
+	toSerialize,err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
 	}
@@ -159,3 +159,5 @@ func (v *NullableAgentsCreateAgentChatResponse) UnmarshalJSON(src []byte) error 
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
+
+

@@ -21,16 +21,19 @@ var _ MappedNullable = &CanvasesCanvasMetadata{}
 
 // CanvasesCanvasMetadata struct for CanvasesCanvasMetadata
 type CanvasesCanvasMetadata struct {
-	Id                          *string                                    `json:"id,omitempty"`
-	OrganizationId              *string                                    `json:"organizationId,omitempty"`
-	Name                        *string                                    `json:"name,omitempty"`
-	Description                 *string                                    `json:"description,omitempty"`
-	CreatedAt                   *time.Time                                 `json:"createdAt,omitempty"`
-	UpdatedAt                   *time.Time                                 `json:"updatedAt,omitempty"`
-	CreatedBy                   *SuperplaneCanvasesUserRef                 `json:"createdBy,omitempty"`
-	IsTemplate                  *bool                                      `json:"isTemplate,omitempty"`
-	VersioningEnabled           *bool                                      `json:"versioningEnabled,omitempty"`
+	Id *string `json:"id,omitempty"`
+	OrganizationId *string `json:"organizationId,omitempty"`
+	Name *string `json:"name,omitempty"`
+	Description *string `json:"description,omitempty"`
+	CreatedAt *time.Time `json:"createdAt,omitempty"`
+	UpdatedAt *time.Time `json:"updatedAt,omitempty"`
+	CreatedBy *SuperplaneCanvasesUserRef `json:"createdBy,omitempty"`
+	IsTemplate *bool `json:"isTemplate,omitempty"`
+	VersioningEnabled *bool `json:"versioningEnabled,omitempty"`
 	ChangeRequestApprovalConfig *CanvasesCanvasChangeRequestApprovalConfig `json:"changeRequestApprovalConfig,omitempty"`
+	SandboxProvider *string `json:"sandboxProvider,omitempty"`
+	SandboxCfBridgeUrl *string `json:"sandboxCfBridgeUrl,omitempty"`
+	SandboxCfAuthToken *string `json:"sandboxCfAuthToken,omitempty"`
 }
 
 // NewCanvasesCanvasMetadata instantiates a new CanvasesCanvasMetadata object
@@ -370,8 +373,104 @@ func (o *CanvasesCanvasMetadata) SetChangeRequestApprovalConfig(v CanvasesCanvas
 	o.ChangeRequestApprovalConfig = &v
 }
 
+// GetSandboxProvider returns the SandboxProvider field value if set, zero value otherwise.
+func (o *CanvasesCanvasMetadata) GetSandboxProvider() string {
+	if o == nil || IsNil(o.SandboxProvider) {
+		var ret string
+		return ret
+	}
+	return *o.SandboxProvider
+}
+
+// GetSandboxProviderOk returns a tuple with the SandboxProvider field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CanvasesCanvasMetadata) GetSandboxProviderOk() (*string, bool) {
+	if o == nil || IsNil(o.SandboxProvider) {
+		return nil, false
+	}
+	return o.SandboxProvider, true
+}
+
+// HasSandboxProvider returns a boolean if a field has been set.
+func (o *CanvasesCanvasMetadata) HasSandboxProvider() bool {
+	if o != nil && !IsNil(o.SandboxProvider) {
+		return true
+	}
+
+	return false
+}
+
+// SetSandboxProvider gets a reference to the given string and assigns it to the SandboxProvider field.
+func (o *CanvasesCanvasMetadata) SetSandboxProvider(v string) {
+	o.SandboxProvider = &v
+}
+
+// GetSandboxCfBridgeUrl returns the SandboxCfBridgeUrl field value if set, zero value otherwise.
+func (o *CanvasesCanvasMetadata) GetSandboxCfBridgeUrl() string {
+	if o == nil || IsNil(o.SandboxCfBridgeUrl) {
+		var ret string
+		return ret
+	}
+	return *o.SandboxCfBridgeUrl
+}
+
+// GetSandboxCfBridgeUrlOk returns a tuple with the SandboxCfBridgeUrl field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CanvasesCanvasMetadata) GetSandboxCfBridgeUrlOk() (*string, bool) {
+	if o == nil || IsNil(o.SandboxCfBridgeUrl) {
+		return nil, false
+	}
+	return o.SandboxCfBridgeUrl, true
+}
+
+// HasSandboxCfBridgeUrl returns a boolean if a field has been set.
+func (o *CanvasesCanvasMetadata) HasSandboxCfBridgeUrl() bool {
+	if o != nil && !IsNil(o.SandboxCfBridgeUrl) {
+		return true
+	}
+
+	return false
+}
+
+// SetSandboxCfBridgeUrl gets a reference to the given string and assigns it to the SandboxCfBridgeUrl field.
+func (o *CanvasesCanvasMetadata) SetSandboxCfBridgeUrl(v string) {
+	o.SandboxCfBridgeUrl = &v
+}
+
+// GetSandboxCfAuthToken returns the SandboxCfAuthToken field value if set, zero value otherwise.
+func (o *CanvasesCanvasMetadata) GetSandboxCfAuthToken() string {
+	if o == nil || IsNil(o.SandboxCfAuthToken) {
+		var ret string
+		return ret
+	}
+	return *o.SandboxCfAuthToken
+}
+
+// GetSandboxCfAuthTokenOk returns a tuple with the SandboxCfAuthToken field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CanvasesCanvasMetadata) GetSandboxCfAuthTokenOk() (*string, bool) {
+	if o == nil || IsNil(o.SandboxCfAuthToken) {
+		return nil, false
+	}
+	return o.SandboxCfAuthToken, true
+}
+
+// HasSandboxCfAuthToken returns a boolean if a field has been set.
+func (o *CanvasesCanvasMetadata) HasSandboxCfAuthToken() bool {
+	if o != nil && !IsNil(o.SandboxCfAuthToken) {
+		return true
+	}
+
+	return false
+}
+
+// SetSandboxCfAuthToken gets a reference to the given string and assigns it to the SandboxCfAuthToken field.
+func (o *CanvasesCanvasMetadata) SetSandboxCfAuthToken(v string) {
+	o.SandboxCfAuthToken = &v
+}
+
 func (o CanvasesCanvasMetadata) MarshalJSON() ([]byte, error) {
-	toSerialize, err := o.ToMap()
+	toSerialize,err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
 	}
@@ -409,6 +508,15 @@ func (o CanvasesCanvasMetadata) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.ChangeRequestApprovalConfig) {
 		toSerialize["changeRequestApprovalConfig"] = o.ChangeRequestApprovalConfig
+	}
+	if !IsNil(o.SandboxProvider) {
+		toSerialize["sandboxProvider"] = o.SandboxProvider
+	}
+	if !IsNil(o.SandboxCfBridgeUrl) {
+		toSerialize["sandboxCfBridgeUrl"] = o.SandboxCfBridgeUrl
+	}
+	if !IsNil(o.SandboxCfAuthToken) {
+		toSerialize["sandboxCfAuthToken"] = o.SandboxCfAuthToken
 	}
 	return toSerialize, nil
 }
@@ -448,3 +556,5 @@ func (v *NullableCanvasesCanvasMetadata) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
+
+

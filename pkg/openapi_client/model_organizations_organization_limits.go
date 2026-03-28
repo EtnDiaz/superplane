@@ -20,12 +20,12 @@ var _ MappedNullable = &OrganizationsOrganizationLimits{}
 
 // OrganizationsOrganizationLimits struct for OrganizationsOrganizationLimits
 type OrganizationsOrganizationLimits struct {
-	MaxCanvases         *int32  `json:"maxCanvases,omitempty"`
-	MaxNodesPerCanvas   *int32  `json:"maxNodesPerCanvas,omitempty"`
-	MaxUsers            *int32  `json:"maxUsers,omitempty"`
-	RetentionWindowDays *int32  `json:"retentionWindowDays,omitempty"`
-	MaxEventsPerMonth   *string `json:"maxEventsPerMonth,omitempty"`
-	MaxIntegrations     *int32  `json:"maxIntegrations,omitempty"`
+	MaxCanvases *int32 `json:"maxCanvases,omitempty"`
+	MaxNodesPerCanvas *int32 `json:"maxNodesPerCanvas,omitempty"`
+	MaxUsers *int32 `json:"maxUsers,omitempty"`
+	RetentionWindowDays *int32 `json:"retentionWindowDays,omitempty"`
+	MaxEventsPerMonth *string `json:"maxEventsPerMonth,omitempty"`
+	MaxIntegrations *int32 `json:"maxIntegrations,omitempty"`
 }
 
 // NewOrganizationsOrganizationLimits instantiates a new OrganizationsOrganizationLimits object
@@ -238,7 +238,7 @@ func (o *OrganizationsOrganizationLimits) SetMaxIntegrations(v int32) {
 }
 
 func (o OrganizationsOrganizationLimits) MarshalJSON() ([]byte, error) {
-	toSerialize, err := o.ToMap()
+	toSerialize,err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
 	}
@@ -303,3 +303,5 @@ func (v *NullableOrganizationsOrganizationLimits) UnmarshalJSON(src []byte) erro
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
+
+

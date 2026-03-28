@@ -21,9 +21,9 @@ var _ MappedNullable = &AgentsAgentChatInfo{}
 
 // AgentsAgentChatInfo struct for AgentsAgentChatInfo
 type AgentsAgentChatInfo struct {
-	Id             *string    `json:"id,omitempty"`
-	InitialMessage *string    `json:"initialMessage,omitempty"`
-	CreatedAt      *time.Time `json:"createdAt,omitempty"`
+	Id *string `json:"id,omitempty"`
+	InitialMessage *string `json:"initialMessage,omitempty"`
+	CreatedAt *time.Time `json:"createdAt,omitempty"`
 }
 
 // NewAgentsAgentChatInfo instantiates a new AgentsAgentChatInfo object
@@ -140,7 +140,7 @@ func (o *AgentsAgentChatInfo) SetCreatedAt(v time.Time) {
 }
 
 func (o AgentsAgentChatInfo) MarshalJSON() ([]byte, error) {
-	toSerialize, err := o.ToMap()
+	toSerialize,err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
 	}
@@ -196,3 +196,5 @@ func (v *NullableAgentsAgentChatInfo) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
+
+

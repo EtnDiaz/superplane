@@ -20,10 +20,10 @@ var _ MappedNullable = &OrganizationsDescribeUsageResponse{}
 
 // OrganizationsDescribeUsageResponse struct for OrganizationsDescribeUsageResponse
 type OrganizationsDescribeUsageResponse struct {
-	Enabled       *bool                            `json:"enabled,omitempty"`
-	StatusMessage *string                          `json:"statusMessage,omitempty"`
-	Limits        *OrganizationsOrganizationLimits `json:"limits,omitempty"`
-	Usage         *OrganizationsOrganizationUsage  `json:"usage,omitempty"`
+	Enabled *bool `json:"enabled,omitempty"`
+	StatusMessage *string `json:"statusMessage,omitempty"`
+	Limits *OrganizationsOrganizationLimits `json:"limits,omitempty"`
+	Usage *OrganizationsOrganizationUsage `json:"usage,omitempty"`
 }
 
 // NewOrganizationsDescribeUsageResponse instantiates a new OrganizationsDescribeUsageResponse object
@@ -172,7 +172,7 @@ func (o *OrganizationsDescribeUsageResponse) SetUsage(v OrganizationsOrganizatio
 }
 
 func (o OrganizationsDescribeUsageResponse) MarshalJSON() ([]byte, error) {
-	toSerialize, err := o.ToMap()
+	toSerialize,err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
 	}
@@ -231,3 +231,5 @@ func (v *NullableOrganizationsDescribeUsageResponse) UnmarshalJSON(src []byte) e
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
+
+
