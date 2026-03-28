@@ -1,0 +1,16 @@
+{
+  "name": "superplane-sandbox-bridge",
+  "main": "src/index.ts",
+  "compatibility_date": "2025-01-01",
+  "compatibility_flags": ["nodejs_compat"],
+
+  "worker_loaders": [
+    {
+      "binding": "LOADER"
+    }
+  ],
+
+  "vars": {
+    "AUTH_TOKEN": "change-me-in-production"
+  }
+}

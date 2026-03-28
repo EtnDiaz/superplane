@@ -5087,7 +5087,7 @@ export function WorkflowPageV2() {
       name: liveCanvas?.metadata?.name || "",
       description: liveCanvas?.metadata?.description || "",
       versioningEnabled: liveCanvas?.metadata?.versioningEnabled ?? false,
-      sandboxProvider: (liveCanvas?.metadata?.sandboxProvider || "") as "" | "docker" | "gvisor" | "cloudflare",
+      sandboxProvider: (liveCanvas?.metadata?.sandboxProvider || "") as "" | "gvisor" | "cloudflare",
       changeRequestApprovalConfig: {
         items: (liveCanvas?.metadata?.changeRequestApprovalConfig?.items || [])
           .map((item) => {

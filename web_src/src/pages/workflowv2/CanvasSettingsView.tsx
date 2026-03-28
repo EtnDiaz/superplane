@@ -16,7 +16,7 @@ type CanvasSettingsApprover = {
   roleName?: string;
 };
 
-type SandboxProvider = "" | "docker" | "gvisor" | "cloudflare";
+type SandboxProvider = "" | "gvisor" | "cloudflare";
 
 type CanvasSettingsValues = {
   name: string;
@@ -355,9 +355,8 @@ export function CanvasSettingsView({
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="__none__">None (no sandboxing)</SelectItem>
-                <SelectItem value="docker">Docker (local, easy setup)</SelectItem>
-                <SelectItem value="gvisor">gVisor (local, most secure)</SelectItem>
-                <SelectItem value="cloudflare">Cloudflare Workers (remote, zero infra)</SelectItem>
+                <SelectItem value="gvisor">gVisor (kernel isolation, local)</SelectItem>
+                <SelectItem value="cloudflare">Cloudflare Dynamic Workers (remote)</SelectItem>
               </SelectContent>
             </Select>
           </div>

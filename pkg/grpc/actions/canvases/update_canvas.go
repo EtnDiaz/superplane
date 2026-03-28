@@ -15,13 +15,14 @@ import (
 	"github.com/superplanehq/superplane/pkg/grpc/actions/messages"
 	"github.com/superplanehq/superplane/pkg/models"
 	pb "github.com/superplanehq/superplane/pkg/protos/canvases"
+	"github.com/superplanehq/superplane/pkg/sandbox"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"gorm.io/gorm"
 )
 
 func UpdateCanvas(
-	_ context.Context,
+	ctx context.Context,
 	authService authorization.Authorization,
 	organizationID string,
 	id string,
@@ -97,6 +98,12 @@ func UpdateCanvas(
 	}
 
 	if sandboxProvider != nil && canvas.SandboxProvider != *sandboxProvider {
+		if *sandboxProvider != sandbox.ProviderNone && *sandboxProvider != sandbox.ProviderCloudflare {
+			ok, reason := sandbox.Available(ctx, *sandboxProvider)
+			if !ok {
+				return nil, status.Errorf(codes.FailedPrecondition, "sandbox provider %q is not available: %s", *sandboxProvider, reason)
+			}
+		}
 		canvas.SandboxProvider = *sandboxProvider
 		changed = true
 	}

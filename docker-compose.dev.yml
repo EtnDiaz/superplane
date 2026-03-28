@@ -86,6 +86,7 @@ services:
       VITE_ENABLE_CUSTOM_COMPONENTS: "true"
       VITE_ENABLE_AGENT_REPL: ${VITE_ENABLE_AGENT_REPL:-true}
       VITE_FORCE_USAGE_PAGE: ${VITE_FORCE_USAGE_PAGE:-true}
+      SANDBOX_RUNNER_URL: "http://sandbox-runner:8888"
 
     ports:
       - ${VITE_DEV_PORT:-5173}:${VITE_DEV_PORT:-5173}
@@ -98,6 +99,7 @@ services:
       - db:db
       - rabbitmq:rabbitmq
       - otel:otel
+      - sandbox-runner:sandbox-runner
 
     depends_on:
       db:
@@ -105,6 +107,8 @@ services:
       rabbitmq:
         condition: service_healthy
       agent:
+        condition: service_healthy
+      sandbox-runner:
         condition: service_healthy
 
     volumes:
@@ -152,6 +156,29 @@ services:
       - uv-cache:/root/.cache/uv
     healthcheck:
       test: ["CMD", "bash", "-lc", "uv --version >/dev/null && python --version >/dev/null"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  sandbox-runner:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: dev
+    command: go run cmd/sandbox-runner/main.go
+    environment:
+      PORT: "8888"
+      GOMODCACHE: "/app/tmp/go/pkg/mod"
+      GOCACHE: "/app/tmp/go-build"
+    ports:
+      - "8888:8888"
+    volumes:
+      - go-pkg-cache:/go
+      - .:/app
+      - /var/run/docker.sock:/var/run/docker.sock
+    restart: "on-failure"
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:8888/health"]
       interval: 5s
       timeout: 3s
       retries: 10
