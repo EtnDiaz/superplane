@@ -255,6 +255,7 @@ export type CanvasesCanvasMetadata = {
   isTemplate?: boolean;
   versioningEnabled?: boolean;
   changeRequestApprovalConfig?: CanvasesCanvasChangeRequestApprovalConfig;
+  sandboxProvider?: string;
 };
 
 export type CanvasesCanvasNodeExecution = {
@@ -494,6 +495,7 @@ export type CanvasesUpdateCanvasBody = {
   description?: string;
   versioningEnabled?: boolean;
   changeRequestApprovalConfig?: CanvasesCanvasChangeRequestApprovalConfig;
+  sandboxProvider?: string;
 };
 
 export type CanvasesUpdateCanvasResponse = {

@@ -24,6 +24,7 @@ import (
 	"github.com/superplanehq/superplane/pkg/models"
 	pb "github.com/superplanehq/superplane/pkg/protos/canvases"
 	"github.com/superplanehq/superplane/pkg/registry"
+	"github.com/superplanehq/superplane/pkg/sandbox"
 	"github.com/superplanehq/superplane/pkg/telemetry"
 	"github.com/superplanehq/superplane/pkg/workers/contexts"
 )
@@ -359,26 +360,27 @@ func (w *NodeExecutor) executeComponentNode(tx *gorm.DB, execution *models.Canva
 	}
 
 	ctx := core.ExecutionContext{
-		ID:             execution.ID,
-		WorkflowID:     execution.WorkflowID.String(),
-		OrganizationID: workflow.OrganizationID.String(),
-		CanvasName:     workflow.Name,
-		NodeID:         execution.NodeID,
-		NodeName:       node.Name,
-		SourceNodeID:   inputEvent.NodeID,
-		BaseURL:        w.baseURL,
-		Configuration:  execution.Configuration.Data(),
-		Data:           input,
-		HTTP:           w.registry.HTTPContext(),
-		Metadata:       contexts.NewExecutionMetadataContext(tx, execution),
-		NodeMetadata:   contexts.NewNodeMetadataContext(tx, node),
-		ExecutionState: contexts.NewExecutionStateContext(tx, execution, onNewEvents),
-		Requests:       contexts.NewExecutionRequestContext(tx, execution),
-		Auth:           contexts.NewAuthContext(tx, workflow.OrganizationID, nil, nil),
-		Notifications:  contexts.NewNotificationContext(tx, workflow.OrganizationID, execution.WorkflowID),
-		Secrets:        contexts.NewSecretsContext(tx, workflow.OrganizationID, w.encryptor),
-		CanvasMemory:   contexts.NewCanvasMemoryContext(tx, execution.WorkflowID),
-		Webhook:        contexts.NewNodeWebhookContext(context.Background(), tx, w.encryptor, node, w.webhookBaseURL),
+		ID:              execution.ID,
+		WorkflowID:      execution.WorkflowID.String(),
+		OrganizationID:  workflow.OrganizationID.String(),
+		CanvasName:      workflow.Name,
+		SandboxProvider: workflow.SandboxProvider,
+		NodeID:          execution.NodeID,
+		NodeName:        node.Name,
+		SourceNodeID:    inputEvent.NodeID,
+		BaseURL:         w.baseURL,
+		Configuration:   execution.Configuration.Data(),
+		Data:            input,
+		HTTP:            w.registry.HTTPContext(),
+		Metadata:        contexts.NewExecutionMetadataContext(tx, execution),
+		NodeMetadata:    contexts.NewNodeMetadataContext(tx, node),
+		ExecutionState:  contexts.NewExecutionStateContext(tx, execution, onNewEvents),
+		Requests:        contexts.NewExecutionRequestContext(tx, execution),
+		Auth:            contexts.NewAuthContext(tx, workflow.OrganizationID, nil, nil),
+		Notifications:   contexts.NewNotificationContext(tx, workflow.OrganizationID, execution.WorkflowID),
+		Secrets:         contexts.NewSecretsContext(tx, workflow.OrganizationID, w.encryptor),
+		CanvasMemory:    contexts.NewCanvasMemoryContext(tx, execution.WorkflowID),
+		Webhook:         contexts.NewNodeWebhookContext(context.Background(), tx, w.encryptor, node, w.webhookBaseURL),
 	}
 	ctx.ExpressionEnv = func(expression string) (map[string]any, error) {
 		builder := contexts.NewNodeConfigurationBuilder(tx, execution.WorkflowID).
@@ -408,7 +410,9 @@ func (w *NodeExecutor) executeComponentNode(tx *gorm.DB, execution *models.Canva
 	}
 
 	ctx.Logger = logger
-	if err := component.Execute(ctx); err != nil {
+
+	wrapped := sandbox.Wrap(component, workflow.SandboxProvider, sandbox.CloudflareConfig{})
+	if err := wrapped.Execute(ctx); err != nil {
 		logger.Errorf("failed to execute component: %v", err)
 		err = execution.FailInTransaction(tx, models.CanvasNodeExecutionResultReasonError, err.Error())
 		return err

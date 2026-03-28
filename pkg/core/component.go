@@ -134,29 +134,30 @@ type OutputChannel struct {
  * to control the state and metadata of each execution of it.
  */
 type ExecutionContext struct {
-	ID             uuid.UUID
-	WorkflowID     string
-	OrganizationID string
-	CanvasName     string
-	NodeID         string
-	NodeName       string
-	SourceNodeID   string
-	BaseURL        string
-	Data           any
-	Configuration  any
-	ExpressionEnv  func(expression string) (map[string]any, error)
-	Logger         *log.Entry
-	HTTP           HTTPContext
-	Metadata       MetadataContext
-	NodeMetadata   MetadataContext
-	ExecutionState ExecutionStateContext
-	Requests       RequestContext
-	Auth           AuthContext
-	Integration    IntegrationContext
-	Notifications  NotificationContext
-	Secrets        SecretsContext
-	CanvasMemory   CanvasMemoryContext
-	Webhook        NodeWebhookContext
+	ID              uuid.UUID
+	WorkflowID      string
+	OrganizationID  string
+	CanvasName      string
+	NodeID          string
+	NodeName        string
+	SourceNodeID    string
+	BaseURL         string
+	SandboxProvider string
+	Data            any
+	Configuration   any
+	ExpressionEnv   func(expression string) (map[string]any, error)
+	Logger          *log.Entry
+	HTTP            HTTPContext
+	Metadata        MetadataContext
+	NodeMetadata    MetadataContext
+	ExecutionState  ExecutionStateContext
+	Requests        RequestContext
+	Auth            AuthContext
+	Integration     IntegrationContext
+	Notifications   NotificationContext
+	Secrets         SecretsContext
+	CanvasMemory    CanvasMemoryContext
+	Webhook         NodeWebhookContext
 }
 
 /*

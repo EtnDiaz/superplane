@@ -20,6 +20,7 @@ type Canvas struct {
 	ChangeRequestApprovers datatypes.JSONSlice[CanvasChangeRequestApprover]
 	Name                   string
 	Description            string
+	SandboxProvider        string
 	CreatedBy              *uuid.UUID
 	CreatedAt              *time.Time
 	UpdatedAt              *time.Time

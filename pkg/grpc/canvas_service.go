@@ -59,6 +59,7 @@ func (s *CanvasService) UpdateCanvas(ctx context.Context, req *pb.UpdateCanvasRe
 		req.Description,
 		req.VersioningEnabled,
 		req.ChangeRequestApprovalConfig,
+		req.SandboxProvider,
 	)
 }
 

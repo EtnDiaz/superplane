@@ -4696,6 +4696,9 @@
         },
         "changeRequestApprovalConfig": {
           "$ref": "#/definitions/CanvasesCanvasChangeRequestApprovalConfig"
+        },
+        "sandboxProvider": {
+          "type": "string"
         }
       }
     },
@@ -5253,6 +5256,9 @@
         },
         "changeRequestApprovalConfig": {
           "$ref": "#/definitions/CanvasesCanvasChangeRequestApprovalConfig"
+        },
+        "sandboxProvider": {
+          "type": "string"
         }
       }
     },

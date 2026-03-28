@@ -107,6 +107,7 @@ func CreateCanvasWithAutoLayoutAndUsage(
 		VersioningEnabled: canvasVersioningEnabled,
 		Name:              pbCanvas.Metadata.Name,
 		Description:       pbCanvas.Metadata.Description,
+		SandboxProvider:   pbCanvas.Metadata.SandboxProvider,
 		CreatedBy:         &createdBy,
 		CreatedAt:         &now,
 		UpdatedAt:         &now,

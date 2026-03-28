@@ -388,6 +388,7 @@ message UpdateCanvasRequest {
   optional string description = 3;
   optional bool versioning_enabled = 4;
   optional CanvasChangeRequestApprovalConfig change_request_approval_config = 5;
+  optional string sandbox_provider = 6;
 }
 
 message UpdateCanvasResponse {
@@ -551,6 +552,7 @@ message Canvas {
     bool is_template = 8;
     bool versioning_enabled = 9;
     CanvasChangeRequestApprovalConfig change_request_approval_config = 10;
+    string sandbox_provider = 11;
   }
 
   message Spec {
