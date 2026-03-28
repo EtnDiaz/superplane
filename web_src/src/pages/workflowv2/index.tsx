@@ -5087,6 +5087,7 @@ export function WorkflowPageV2() {
       name: liveCanvas?.metadata?.name || "",
       description: liveCanvas?.metadata?.description || "",
       versioningEnabled: liveCanvas?.metadata?.versioningEnabled ?? false,
+      sandboxProvider: (liveCanvas?.metadata?.sandboxProvider || "") as "" | "docker" | "gvisor" | "cloudflare",
       changeRequestApprovalConfig: {
         items: (liveCanvas?.metadata?.changeRequestApprovalConfig?.items || [])
           .map((item) => {
@@ -5113,6 +5114,7 @@ export function WorkflowPageV2() {
     }),
     [
       liveCanvas?.metadata?.versioningEnabled,
+      liveCanvas?.metadata?.sandboxProvider,
       liveCanvas?.metadata?.changeRequestApprovalConfig?.items,
       liveCanvas?.metadata?.description,
       liveCanvas?.metadata?.name,
@@ -5157,6 +5159,7 @@ export function WorkflowPageV2() {
       name: string;
       description: string;
       versioningEnabled?: boolean;
+      sandboxProvider?: string;
       changeRequestApprovalConfig?: {
         items?: Array<{ type: "TYPE_ANYONE" | "TYPE_USER" | "TYPE_ROLE"; userId?: string; roleName?: string }>;
       };
@@ -5169,6 +5172,7 @@ export function WorkflowPageV2() {
         name: values.name,
         description: values.description,
         versioningEnabled: values.versioningEnabled,
+        sandboxProvider: values.sandboxProvider,
         changeRequestApprovalConfig: values.changeRequestApprovalConfig,
       });
     },

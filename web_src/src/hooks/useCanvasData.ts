@@ -361,6 +361,7 @@ export const useUpdateCanvas = (organizationId: string, canvasId: string) => {
       name?: string;
       description?: string;
       versioningEnabled?: boolean;
+      sandboxProvider?: string;
       changeRequestApprovalConfig?: {
         items?: Array<{ type: "TYPE_ANYONE" | "TYPE_USER" | "TYPE_ROLE"; userId?: string; roleName?: string }>;
       };
@@ -372,6 +373,7 @@ export const useUpdateCanvas = (organizationId: string, canvasId: string) => {
             name: data.name,
             description: data.description,
             versioningEnabled: data.versioningEnabled,
+            sandboxProvider: data.sandboxProvider,
             changeRequestApprovalConfig: data.changeRequestApprovalConfig,
           },
         }),

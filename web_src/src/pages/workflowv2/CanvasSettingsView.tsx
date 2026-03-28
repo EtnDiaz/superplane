@@ -16,10 +16,13 @@ type CanvasSettingsApprover = {
   roleName?: string;
 };
 
+type SandboxProvider = "" | "docker" | "gvisor" | "cloudflare";
+
 type CanvasSettingsValues = {
   name: string;
   description: string;
   versioningEnabled: boolean;
+  sandboxProvider: SandboxProvider;
   changeRequestApprovalConfig?: {
     items?: CanvasSettingsApprover[];
   };
@@ -118,6 +121,7 @@ interface CanvasSettingsViewProps {
     name: string;
     description: string;
     versioningEnabled?: boolean;
+    sandboxProvider?: string;
     changeRequestApprovalConfig?: {
       items?: Array<{ type: "TYPE_ANYONE" | "TYPE_USER" | "TYPE_ROLE"; userId?: string; roleName?: string }>;
     };
@@ -149,6 +153,7 @@ export function CanvasSettingsView({
   const [name, setName] = useState(initialValues.name);
   const [description, setDescription] = useState(initialValues.description);
   const [versioningEnabled, setVersioningEnabled] = useState(initialValues.versioningEnabled);
+  const [sandboxProvider, setSandboxProvider] = useState<SandboxProvider>(initialValues.sandboxProvider);
   const [approvers, setApprovers] = useState<CanvasSettingsApprover[]>(
     normalizeApprovers(initialValues.changeRequestApprovalConfig?.items),
   );
@@ -162,6 +167,7 @@ export function CanvasSettingsView({
     setName(initialValues.name);
     setDescription(initialValues.description);
     setVersioningEnabled(isVersioningEnforcedByOrganization ? true : initialValues.versioningEnabled);
+    setSandboxProvider(initialValues.sandboxProvider);
     setApprovers(normalizeApprovers(initialValues.changeRequestApprovalConfig?.items));
   }, [initialValues, isVersioningEnforcedByOrganization]);
 
@@ -175,6 +181,7 @@ export function CanvasSettingsView({
       name !== initialValues.name ||
       description !== initialValues.description ||
       effectiveCanvasVersioningEnabled !== initialValues.versioningEnabled ||
+      sandboxProvider !== initialValues.sandboxProvider ||
       JSON.stringify(approvers) !== JSON.stringify(normalizedInitialApprovers)
     );
   }, [
@@ -182,8 +189,10 @@ export function CanvasSettingsView({
     initialValues.versioningEnabled,
     initialValues.description,
     initialValues.name,
+    initialValues.sandboxProvider,
     isVersioningEnforcedByOrganization,
     name,
+    sandboxProvider,
     approvers,
     normalizedInitialApprovers,
     versioningEnabled,
@@ -217,6 +226,7 @@ export function CanvasSettingsView({
         name,
         description,
         versioningEnabled: isVersioningEnforcedByOrganization ? undefined : versioningEnabled,
+        sandboxProvider,
         changeRequestApprovalConfig: effectiveCanvasVersioningEnabled
           ? {
               items: normalizeApprovers(approvers),
@@ -324,6 +334,33 @@ export function CanvasSettingsView({
               placeholder="Describe canvas…"
             />
           </Field>
+        </Fieldset>
+
+        <Fieldset className="rounded-lg border border-slate-950/15 bg-white p-6">
+          <div className="space-y-3">
+            <div>
+              <Label className="mb-1 block text-sm font-medium text-gray-700">Sandbox Runtime</Label>
+              <p className="text-[13px] text-gray-500">
+                When set, every component execution in this canvas runs inside an isolated sandbox. Protects against
+                prompt injection and untrusted code escaping to the host.
+              </p>
+            </div>
+            <Select
+              value={sandboxProvider || "__none__"}
+              disabled={!canUpdateCanvas}
+              onValueChange={(value) => setSandboxProvider(value === "__none__" ? "" : (value as SandboxProvider))}
+            >
+              <SelectTrigger className="h-9 w-full max-w-xs" aria-label="Sandbox provider">
+                <SelectValue placeholder="Select sandbox provider" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="__none__">None (no sandboxing)</SelectItem>
+                <SelectItem value="docker">Docker (local, easy setup)</SelectItem>
+                <SelectItem value="gvisor">gVisor (local, most secure)</SelectItem>
+                <SelectItem value="cloudflare">Cloudflare Workers (remote, zero infra)</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
         </Fieldset>
 
         <Fieldset className="rounded-lg border border-slate-950/15 bg-white p-6">
