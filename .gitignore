@@ -17,4 +17,4 @@ CLAUDE.local.md
 .env
 .idea/
 .agents/
-.worktrees/
+.worktrees/cloudflare-bridge/node_modules/
