@@ -238,6 +238,7 @@ import {
 } from "./elastic/index";
 
 import { filterMapper, FILTER_STATE_REGISTRY } from "./filter";
+import { sandboxMapper, SANDBOX_STATE_REGISTRY } from "./sandbox";
 import { sshMapper, SSH_STATE_REGISTRY } from "./ssh";
 import { waitCustomFieldRenderer, waitMapper, WAIT_STATE_REGISTRY } from "./wait";
 import { approvalMapper, approvalDataBuilder, APPROVAL_STATE_REGISTRY } from "./approval";
@@ -266,6 +267,7 @@ const componentBaseMappers: Record<string, ComponentBaseMapper> = {
   upsertMemory: upsertMemoryMapper,
   if: ifMapper,
   http: httpMapper,
+  sandbox: sandboxMapper,
   ssh: sshMapper,
   timeGate: timeGateMapper,
   filter: filterMapper,
@@ -416,6 +418,7 @@ const componentAdditionalDataBuilders: Record<string, ComponentAdditionalDataBui
 const eventStateRegistries: Record<string, EventStateRegistry> = {
   approval: APPROVAL_STATE_REGISTRY,
   http: HTTP_STATE_REGISTRY,
+  sandbox: SANDBOX_STATE_REGISTRY,
   ssh: SSH_STATE_REGISTRY,
   filter: FILTER_STATE_REGISTRY,
   if: IF_STATE_REGISTRY,

@@ -18,6 +18,7 @@ import (
 
 const (
 	ProviderNone       = ""
+	ProviderDocker     = "docker"
 	ProviderGVisor     = "gvisor"
 	ProviderCloudflare = "cloudflare"
 
@@ -84,6 +85,8 @@ func Available(ctx context.Context, provider string) (bool, string) {
 	switch provider {
 	case ProviderNone:
 		return true, ""
+	case ProviderDocker:
+		return checkRunnerDocker(ctx)
 	case ProviderGVisor:
 		return checkRunnerGVisor(ctx)
 	case ProviderCloudflare:
@@ -91,6 +94,37 @@ func Available(ctx context.Context, provider string) (bool, string) {
 	default:
 		return false, fmt.Sprintf("unknown provider: %s", provider)
 	}
+}
+
+func checkRunnerDocker(ctx context.Context) (bool, string) {
+	reqCtx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	req, err := http.NewRequestWithContext(reqCtx, http.MethodGet, runnerURL()+"/status", nil)
+	if err != nil {
+		return false, "sandbox-runner unreachable: " + err.Error()
+	}
+
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return false, "sandbox-runner unreachable: " + err.Error()
+	}
+	defer resp.Body.Close()
+
+	var status runnerStatusResponse
+	if err := json.NewDecoder(resp.Body).Decode(&status); err != nil {
+		return false, "sandbox-runner returned invalid response"
+	}
+
+	if !status.Docker {
+		reason := status.Reason
+		if reason == "" {
+			reason = "Docker not available on sandbox-runner"
+		}
+		return false, reason
+	}
+
+	return true, ""
 }
 
 func checkRunnerGVisor(ctx context.Context) (bool, string) {
@@ -126,6 +160,10 @@ func checkRunnerGVisor(ctx context.Context) (bool, string) {
 
 func RunInGVisor(ctx context.Context, language, code string, input map[string]any, timeoutS int) (*ExecuteResult, error) {
 	return callRunner(ctx, ProviderGVisor, language, code, input, timeoutS)
+}
+
+func RunInDocker(ctx context.Context, language, code string, input map[string]any, timeoutS int) (*ExecuteResult, error) {
+	return callRunner(ctx, ProviderDocker, language, code, input, timeoutS)
 }
 
 func callRunner(ctx context.Context, provider, language, code string, input map[string]any, timeoutS int) (*ExecuteResult, error) {

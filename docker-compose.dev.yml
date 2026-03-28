@@ -170,12 +170,14 @@ services:
       PORT: "8888"
       GOMODCACHE: "/app/tmp/go/pkg/mod"
       GOCACHE: "/app/tmp/go-build"
+      DOCKER_HOST: "unix:///run/host-services/docker.proxy.sock"
     ports:
       - "8888:8888"
     volumes:
       - go-pkg-cache:/go
       - .:/app
       - /var/run/docker.sock:/var/run/docker.sock
+      - /run/host-services/docker.proxy.sock:/run/host-services/docker.proxy.sock
     restart: "on-failure"
     healthcheck:
       test: ["CMD", "wget", "-qO-", "http://localhost:8888/health"]
