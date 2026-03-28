@@ -21,14 +21,14 @@ func Test__UpdateCanvas(t *testing.T) {
 	t.Run("invalid canvas id -> error", func(t *testing.T) {
 		name := "name"
 		description := "description"
-		_, err := UpdateCanvas(context.Background(), r.AuthService, r.Organization.ID.String(), "invalid-id", &name, &description, nil, nil, nil)
+		_, err := UpdateCanvas(context.Background(), r.AuthService, r.Organization.ID.String(), "invalid-id", &name, &description, nil, nil, nil, nil, nil)
 		s, ok := status.FromError(err)
 		assert.True(t, ok)
 		assert.Equal(t, codes.InvalidArgument, s.Code())
 	})
 
 	t.Run("canvas does not exist -> error", func(t *testing.T) {
-		_, err := UpdateCanvas(context.Background(), r.AuthService, r.Organization.ID.String(), uuid.New().String(), stringPointer("updated-name"), stringPointer("updated-description"), nil, nil, nil)
+		_, err := UpdateCanvas(context.Background(), r.AuthService, r.Organization.ID.String(), uuid.New().String(), stringPointer("updated-name"), stringPointer("updated-description"), nil, nil, nil, nil, nil)
 		s, ok := status.FromError(err)
 		assert.True(t, ok)
 		assert.Equal(t, codes.NotFound, s.Code())
@@ -37,7 +37,7 @@ func Test__UpdateCanvas(t *testing.T) {
 	t.Run("empty name -> error", func(t *testing.T) {
 		canvas, _ := support.CreateCanvas(t, r.Organization.ID, r.User, []models.CanvasNode{}, []models.Edge{})
 
-		_, err := UpdateCanvas(context.Background(), r.AuthService, r.Organization.ID.String(), canvas.ID.String(), stringPointer("   "), stringPointer("description"), nil, nil, nil)
+		_, err := UpdateCanvas(context.Background(), r.AuthService, r.Organization.ID.String(), canvas.ID.String(), stringPointer("   "), stringPointer("description"), nil, nil, nil, nil, nil)
 		s, ok := status.FromError(err)
 		assert.True(t, ok)
 		assert.Equal(t, codes.InvalidArgument, s.Code())
@@ -48,7 +48,7 @@ func Test__UpdateCanvas(t *testing.T) {
 		newName := support.RandomName("updated-canvas")
 		newDescription := "Canvas description updated"
 
-		response, err := UpdateCanvas(context.Background(), r.AuthService, r.Organization.ID.String(), canvas.ID.String(), &newName, &newDescription, nil, nil, nil)
+		response, err := UpdateCanvas(context.Background(), r.AuthService, r.Organization.ID.String(), canvas.ID.String(), &newName, &newDescription, nil, nil, nil, nil, nil)
 		require.NoError(t, err)
 		require.NotNil(t, response)
 		require.NotNil(t, response.Canvas)
@@ -67,7 +67,7 @@ func Test__UpdateCanvas(t *testing.T) {
 		existingCanvas, _ := support.CreateCanvas(t, r.Organization.ID, r.User, []models.CanvasNode{}, []models.Edge{})
 		targetCanvas, _ := support.CreateCanvas(t, r.Organization.ID, r.User, []models.CanvasNode{}, []models.Edge{})
 
-		_, err := UpdateCanvas(context.Background(), r.AuthService, r.Organization.ID.String(), targetCanvas.ID.String(), &existingCanvas.Name, &targetCanvas.Description, nil, nil, nil)
+		_, err := UpdateCanvas(context.Background(), r.AuthService, r.Organization.ID.String(), targetCanvas.ID.String(), &existingCanvas.Name, &targetCanvas.Description, nil, nil, nil, nil, nil)
 		s, ok := status.FromError(err)
 		assert.True(t, ok)
 		assert.Equal(t, codes.AlreadyExists, s.Code())
@@ -81,7 +81,7 @@ func Test__UpdateCanvas(t *testing.T) {
 		)
 		enabled := true
 
-		response, err := UpdateCanvas(context.Background(), r.AuthService, r.Organization.ID.String(), canvas.ID.String(), nil, nil, &enabled, nil, nil)
+		response, err := UpdateCanvas(context.Background(), r.AuthService, r.Organization.ID.String(), canvas.ID.String(), nil, nil, &enabled, nil, nil, nil, nil)
 		require.NoError(t, err)
 		require.NotNil(t, response)
 		require.NotNil(t, response.Canvas)
@@ -101,11 +101,11 @@ func Test__UpdateCanvas(t *testing.T) {
 		)
 
 		enabled := true
-		_, err := UpdateCanvas(context.Background(), r.AuthService, r.Organization.ID.String(), canvas.ID.String(), nil, nil, &enabled, nil, nil)
+		_, err := UpdateCanvas(context.Background(), r.AuthService, r.Organization.ID.String(), canvas.ID.String(), nil, nil, &enabled, nil, nil, nil, nil)
 		require.NoError(t, err)
 
 		disabled := false
-		response, err := UpdateCanvas(context.Background(), r.AuthService, r.Organization.ID.String(), canvas.ID.String(), nil, nil, &disabled, nil, nil)
+		response, err := UpdateCanvas(context.Background(), r.AuthService, r.Organization.ID.String(), canvas.ID.String(), nil, nil, &disabled, nil, nil, nil, nil)
 		require.NoError(t, err)
 		require.NotNil(t, response)
 		require.NotNil(t, response.Canvas)
@@ -125,7 +125,7 @@ func Test__UpdateCanvas(t *testing.T) {
 		)
 
 		enabled := true
-		response, err := UpdateCanvas(context.Background(), r.AuthService, r.Organization.ID.String(), canvas.ID.String(), nil, nil, &enabled, nil, nil)
+		response, err := UpdateCanvas(context.Background(), r.AuthService, r.Organization.ID.String(), canvas.ID.String(), nil, nil, &enabled, nil, nil, nil, nil)
 		require.NoError(t, err)
 		require.NotNil(t, response)
 		require.NotNil(t, response.Canvas)
@@ -148,7 +148,7 @@ func Test__UpdateCanvas(t *testing.T) {
 						UserId: user.ID.String(),
 					},
 				},
-			}, nil)
+			}, nil, nil, nil)
 		require.NoError(t, err)
 		require.NotNil(t, response)
 		require.NotNil(t, response.Canvas)
@@ -169,7 +169,7 @@ func Test__UpdateCanvas(t *testing.T) {
 						UserId: uuid.New().String(),
 					},
 				},
-			}, nil)
+			}, nil, nil, nil)
 		s, ok := status.FromError(err)
 		assert.True(t, ok)
 		assert.Equal(t, codes.InvalidArgument, s.Code())
@@ -183,7 +183,7 @@ func Test__UpdateCanvas(t *testing.T) {
 					{Type: pb.CanvasChangeRequestApprover_TYPE_ANYONE},
 					{Type: pb.CanvasChangeRequestApprover_TYPE_ANYONE},
 				},
-			}, nil)
+			}, nil, nil, nil)
 		s, ok := status.FromError(err)
 		assert.True(t, ok)
 		assert.Equal(t, codes.InvalidArgument, s.Code())

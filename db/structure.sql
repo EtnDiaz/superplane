@@ -207,7 +207,7 @@ CREATE TABLE public.canvas_memories (
 
 CREATE TABLE public.casbin_rule (
     id integer NOT NULL,
-    ptype character varying(100) NOT NULL,
+    ptype character varying(100),
     v0 character varying(100),
     v1 character varying(100),
     v2 character varying(100),
@@ -648,7 +648,9 @@ CREATE TABLE public.workflows (
     live_version_id uuid NOT NULL,
     versioning_enabled boolean DEFAULT false NOT NULL,
     change_request_approvers jsonb DEFAULT '[{"type": "anyone"}]'::jsonb NOT NULL,
-    sandbox_provider character varying(255) DEFAULT ''::character varying NOT NULL
+    sandbox_provider character varying(255) DEFAULT ''::character varying NOT NULL,
+    sandbox_cf_bridge_url text DEFAULT ''::text NOT NULL,
+    sandbox_cf_auth_token text DEFAULT ''::text NOT NULL
 );
 
 
@@ -1192,6 +1194,13 @@ CREATE INDEX idx_blueprints_organization_id ON public.blueprints USING btree (or
 --
 
 CREATE INDEX idx_canvas_memories_canvas_namespace ON public.canvas_memories USING btree (canvas_id, namespace);
+
+
+--
+-- Name: idx_casbin_rule; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_casbin_rule ON public.casbin_rule USING btree (ptype, v0, v1, v2, v3, v4, v5);
 
 
 --
@@ -1981,7 +1990,7 @@ SET row_security = off;
 --
 
 COPY public.schema_migrations (version, dirty) FROM stdin;
-20260328140348	f
+20260328152027	f
 \.
 
 

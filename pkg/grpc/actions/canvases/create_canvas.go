@@ -107,8 +107,10 @@ func CreateCanvasWithAutoLayoutAndUsage(
 		VersioningEnabled: canvasVersioningEnabled,
 		Name:              pbCanvas.Metadata.Name,
 		Description:       pbCanvas.Metadata.Description,
-		SandboxProvider:   pbCanvas.Metadata.SandboxProvider,
-		CreatedBy:         &createdBy,
+		SandboxProvider:    pbCanvas.Metadata.SandboxProvider,
+		SandboxCfBridgeURL: pbCanvas.Metadata.SandboxCfBridgeUrl,
+		SandboxCfAuthToken: pbCanvas.Metadata.SandboxCfAuthToken,
+		CreatedBy:          &createdBy,
 		CreatedAt:         &now,
 		UpdatedAt:         &now,
 	}

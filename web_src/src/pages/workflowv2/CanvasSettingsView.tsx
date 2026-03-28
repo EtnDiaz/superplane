@@ -23,6 +23,8 @@ type CanvasSettingsValues = {
   description: string;
   versioningEnabled: boolean;
   sandboxProvider: SandboxProvider;
+  sandboxCfBridgeUrl: string;
+  sandboxCfAuthToken: string;
   changeRequestApprovalConfig?: {
     items?: CanvasSettingsApprover[];
   };
@@ -122,6 +124,8 @@ interface CanvasSettingsViewProps {
     description: string;
     versioningEnabled?: boolean;
     sandboxProvider?: string;
+    sandboxCfBridgeUrl?: string;
+    sandboxCfAuthToken?: string;
     changeRequestApprovalConfig?: {
       items?: Array<{ type: "TYPE_ANYONE" | "TYPE_USER" | "TYPE_ROLE"; userId?: string; roleName?: string }>;
     };
@@ -154,6 +158,8 @@ export function CanvasSettingsView({
   const [description, setDescription] = useState(initialValues.description);
   const [versioningEnabled, setVersioningEnabled] = useState(initialValues.versioningEnabled);
   const [sandboxProvider, setSandboxProvider] = useState<SandboxProvider>(initialValues.sandboxProvider);
+  const [sandboxCfBridgeUrl, setSandboxCfBridgeUrl] = useState(initialValues.sandboxCfBridgeUrl);
+  const [sandboxCfAuthToken, setSandboxCfAuthToken] = useState(initialValues.sandboxCfAuthToken);
   const [approvers, setApprovers] = useState<CanvasSettingsApprover[]>(
     normalizeApprovers(initialValues.changeRequestApprovalConfig?.items),
   );
@@ -168,6 +174,8 @@ export function CanvasSettingsView({
     setDescription(initialValues.description);
     setVersioningEnabled(isVersioningEnforcedByOrganization ? true : initialValues.versioningEnabled);
     setSandboxProvider(initialValues.sandboxProvider);
+    setSandboxCfBridgeUrl(initialValues.sandboxCfBridgeUrl);
+    setSandboxCfAuthToken(initialValues.sandboxCfAuthToken);
     setApprovers(normalizeApprovers(initialValues.changeRequestApprovalConfig?.items));
   }, [initialValues, isVersioningEnforcedByOrganization]);
 
@@ -182,6 +190,8 @@ export function CanvasSettingsView({
       description !== initialValues.description ||
       effectiveCanvasVersioningEnabled !== initialValues.versioningEnabled ||
       sandboxProvider !== initialValues.sandboxProvider ||
+      sandboxCfBridgeUrl !== initialValues.sandboxCfBridgeUrl ||
+      sandboxCfAuthToken !== initialValues.sandboxCfAuthToken ||
       JSON.stringify(approvers) !== JSON.stringify(normalizedInitialApprovers)
     );
   }, [
@@ -190,6 +200,8 @@ export function CanvasSettingsView({
     initialValues.description,
     initialValues.name,
     initialValues.sandboxProvider,
+    initialValues.sandboxCfBridgeUrl,
+    initialValues.sandboxCfAuthToken,
     isVersioningEnforcedByOrganization,
     name,
     sandboxProvider,
@@ -227,6 +239,8 @@ export function CanvasSettingsView({
         description,
         versioningEnabled: isVersioningEnforcedByOrganization ? undefined : versioningEnabled,
         sandboxProvider,
+        sandboxCfBridgeUrl: sandboxProvider === "cloudflare" ? sandboxCfBridgeUrl : undefined,
+        sandboxCfAuthToken: sandboxProvider === "cloudflare" ? sandboxCfAuthToken : undefined,
         changeRequestApprovalConfig: effectiveCanvasVersioningEnabled
           ? {
               items: normalizeApprovers(approvers),
@@ -359,6 +373,34 @@ export function CanvasSettingsView({
                 <SelectItem value="cloudflare">Cloudflare Dynamic Workers (remote)</SelectItem>
               </SelectContent>
             </Select>
+            {sandboxProvider === "cloudflare" && (
+              <div className="mt-4 space-y-3 border-t border-slate-950/10 pt-4">
+                <div className="space-y-1">
+                  <Label className="block text-xs font-medium text-gray-600">Bridge Worker URL</Label>
+                  <Input
+                    type="text"
+                    value={sandboxCfBridgeUrl}
+                    onChange={(e) => setSandboxCfBridgeUrl(e.target.value)}
+                    disabled={!canUpdateCanvas}
+                    placeholder="https://superplane-sandbox-bridge.yourname.workers.dev"
+                  />
+                  <p className="text-[11px] text-gray-400">
+                    Deploy the Bridge Worker first in{" "}
+                    <span className="font-mono">Settings → Sandboxes</span>, then paste the URL here.
+                  </p>
+                </div>
+                <div className="space-y-1">
+                  <Label className="block text-xs font-medium text-gray-600">Auth Token</Label>
+                  <Input
+                    type="password"
+                    value={sandboxCfAuthToken}
+                    onChange={(e) => setSandboxCfAuthToken(e.target.value)}
+                    disabled={!canUpdateCanvas}
+                    placeholder="secret token set during Bridge Worker deploy"
+                  />
+                </div>
+              </div>
+            )}
           </div>
         </Fieldset>
 

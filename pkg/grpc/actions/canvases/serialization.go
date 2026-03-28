@@ -59,7 +59,8 @@ func SerializeCanvas(canvas *models.Canvas, includeStatus bool) (*pb.Canvas, err
 				ChangeRequestApprovalConfig: serializeCanvasChangeRequestApprovalConfig(
 					canvas.EffectiveChangeRequestApprovers(),
 				),
-				SandboxProvider: canvas.SandboxProvider,
+				SandboxProvider:    canvas.SandboxProvider,
+				SandboxCfBridgeUrl: canvas.SandboxCfBridgeURL,
 			},
 			Spec: &pb.Canvas_Spec{
 				Nodes: serializedNodes,
@@ -126,7 +127,8 @@ func SerializeCanvas(canvas *models.Canvas, includeStatus bool) (*pb.Canvas, err
 			ChangeRequestApprovalConfig: serializeCanvasChangeRequestApprovalConfig(
 				canvas.EffectiveChangeRequestApprovers(),
 			),
-			SandboxProvider: canvas.SandboxProvider,
+			SandboxProvider:    canvas.SandboxProvider,
+			SandboxCfBridgeUrl: canvas.SandboxCfBridgeURL,
 		},
 		Spec: &pb.Canvas_Spec{
 			Nodes: serializedNodes,

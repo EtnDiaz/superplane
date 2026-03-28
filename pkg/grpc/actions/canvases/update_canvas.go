@@ -31,6 +31,8 @@ func UpdateCanvas(
 	versioningEnabled *bool,
 	changeRequestApprovalConfig *pb.CanvasChangeRequestApprovalConfig,
 	sandboxProvider *string,
+	sandboxCfBridgeURL *string,
+	sandboxCfAuthToken *string,
 ) (*pb.UpdateCanvasResponse, error) {
 	canvasID, err := uuid.Parse(id)
 	if err != nil {
@@ -105,6 +107,16 @@ func UpdateCanvas(
 			}
 		}
 		canvas.SandboxProvider = *sandboxProvider
+		changed = true
+	}
+
+	if sandboxCfBridgeURL != nil && canvas.SandboxCfBridgeURL != *sandboxCfBridgeURL {
+		canvas.SandboxCfBridgeURL = *sandboxCfBridgeURL
+		changed = true
+	}
+
+	if sandboxCfAuthToken != nil && *sandboxCfAuthToken != "" && canvas.SandboxCfAuthToken != *sandboxCfAuthToken {
+		canvas.SandboxCfAuthToken = *sandboxCfAuthToken
 		changed = true
 	}
 

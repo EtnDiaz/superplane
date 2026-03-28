@@ -4699,6 +4699,12 @@
         },
         "sandboxProvider": {
           "type": "string"
+        },
+        "sandboxCfBridgeUrl": {
+          "type": "string"
+        },
+        "sandboxCfAuthToken": {
+          "type": "string"
         }
       }
     },
@@ -5258,6 +5264,12 @@
           "$ref": "#/definitions/CanvasesCanvasChangeRequestApprovalConfig"
         },
         "sandboxProvider": {
+          "type": "string"
+        },
+        "sandboxCfBridgeUrl": {
+          "type": "string"
+        },
+        "sandboxCfAuthToken": {
           "type": "string"
         }
       }

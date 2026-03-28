@@ -1,0 +1,2 @@
+ALTER TABLE workflows ADD COLUMN IF NOT EXISTS sandbox_cf_bridge_url TEXT NOT NULL DEFAULT '';
+ALTER TABLE workflows ADD COLUMN IF NOT EXISTS sandbox_cf_auth_token TEXT NOT NULL DEFAULT '';

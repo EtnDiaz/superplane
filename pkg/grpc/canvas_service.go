@@ -60,6 +60,8 @@ func (s *CanvasService) UpdateCanvas(ctx context.Context, req *pb.UpdateCanvasRe
 		req.VersioningEnabled,
 		req.ChangeRequestApprovalConfig,
 		req.SandboxProvider,
+		req.SandboxCfBridgeUrl,
+		req.SandboxCfAuthToken,
 	)
 }
 

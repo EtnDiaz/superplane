@@ -21,6 +21,8 @@ type Canvas struct {
 	Name                   string
 	Description            string
 	SandboxProvider        string
+	SandboxCfBridgeURL     string
+	SandboxCfAuthToken     string
 	CreatedBy              *uuid.UUID
 	CreatedAt              *time.Time
 	UpdatedAt              *time.Time

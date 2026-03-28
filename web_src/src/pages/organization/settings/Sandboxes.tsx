@@ -1,8 +1,11 @@
-import { Cloud, Box, Shield, ExternalLink } from "lucide-react";
+import { Cloud, Box, Shield, ExternalLink, Copy, CheckCircle, AlertCircle } from "lucide-react";
 import { usePageTitle } from "@/hooks/usePageTitle";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { useQuery } from "@tanstack/react-query";
 import { useCanvases } from "@/hooks/useCanvasData";
+import { useState } from "react";
 import type { LucideIcon } from "lucide-react";
 
 interface SandboxesProps {
@@ -142,6 +145,158 @@ function ProviderCard({ provider, status, isLoading }: ProviderCardProps) {
   );
 }
 
+interface CloudflareDeployResponse {
+  workerUrl: string;
+}
+
+interface CloudflareDeploySectionProps {
+  organizationId: string;
+}
+
+function CloudflareDeploySection({ organizationId }: CloudflareDeploySectionProps) {
+  const [accountId, setAccountId] = useState("");
+  const [apiToken, setApiToken] = useState("");
+  const [authToken, setAuthToken] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [deployedUrl, setDeployedUrl] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
+
+  const handleDeploy = async () => {
+    setIsLoading(true);
+    setError(null);
+    setDeployedUrl(null);
+
+    try {
+      const response = await fetch("/api/v1/sandbox/cloudflare/deploy", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-org-id": organizationId,
+        },
+        body: JSON.stringify({ accountId, apiToken, authToken }),
+      });
+
+      const data = (await response.json()) as CloudflareDeployResponse;
+
+      if (!response.ok) {
+        const errData = data as unknown as { error?: string; message?: string };
+        setError(errData.error ?? errData.message ?? `Deploy failed: ${response.statusText}`);
+        return;
+      }
+
+      setDeployedUrl(data.workerUrl);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "An unexpected error occurred");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleCopy = async () => {
+    if (!deployedUrl) return;
+    await navigator.clipboard.writeText(deployedUrl);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  return (
+    <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-300 dark:border-gray-700 overflow-hidden">
+      <div className="px-6 pt-6 pb-6">
+        <div className="flex items-start gap-3 mb-5">
+          <div className="flex-shrink-0 w-9 h-9 rounded-md bg-orange-50 dark:bg-orange-900/20 flex items-center justify-center">
+            <Cloud size={18} className="text-orange-600 dark:text-orange-400" />
+          </div>
+          <div>
+            <h3 className="text-sm font-semibold text-gray-900 dark:text-white">
+              Cloudflare Dynamic Workers — Auto Deploy
+            </h3>
+            <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+              Deploy a Cloudflare Bridge Worker to your account. Once deployed, use the URL in Canvas Settings →
+              Sandbox Runtime → Cloudflare.
+            </p>
+          </div>
+        </div>
+
+        <div className="space-y-3">
+          <div>
+            <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Account ID</label>
+            <Input
+              placeholder="Cloudflare Account ID"
+              value={accountId}
+              onChange={(e) => setAccountId(e.target.value)}
+              disabled={isLoading}
+            />
+          </div>
+          <div>
+            <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">API Token</label>
+            <Input
+              type="password"
+              placeholder="CF API token with Workers Scripts:Edit permission"
+              value={apiToken}
+              onChange={(e) => setApiToken(e.target.value)}
+              disabled={isLoading}
+            />
+          </div>
+          <div>
+            <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Auth Token</label>
+            <Input
+              type="password"
+              placeholder="Secret token for securing the Bridge Worker"
+              value={authToken}
+              onChange={(e) => setAuthToken(e.target.value)}
+              disabled={isLoading}
+            />
+          </div>
+
+          <Button
+            onClick={handleDeploy}
+            disabled={isLoading || !accountId || !apiToken || !authToken}
+            className="mt-1"
+          >
+            {isLoading ? "Deploying…" : "Deploy Bridge Worker"}
+          </Button>
+        </div>
+
+        {deployedUrl && (
+          <div className="mt-4 rounded-md bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 p-4">
+            <div className="flex items-start gap-2">
+              <CheckCircle size={16} className="text-green-600 dark:text-green-400 mt-0.5 shrink-0" />
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium text-green-800 dark:text-green-300">Bridge Worker deployed!</p>
+                <div className="mt-2 flex items-center gap-2">
+                  <code className="text-xs text-green-700 dark:text-green-400 bg-green-100 dark:bg-green-900/40 px-2 py-1 rounded font-mono truncate flex-1">
+                    {deployedUrl}
+                  </code>
+                  <button
+                    onClick={handleCopy}
+                    className="shrink-0 p-1.5 rounded hover:bg-green-100 dark:hover:bg-green-900/40 text-green-700 dark:text-green-400 transition-colors"
+                    title="Copy URL"
+                  >
+                    {copied ? <CheckCircle size={14} /> : <Copy size={14} />}
+                  </button>
+                </div>
+                <p className="mt-2 text-xs text-green-700 dark:text-green-400">
+                  Copy this URL and use it in Canvas Settings → Sandbox Runtime → Cloudflare
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {error && (
+          <div className="mt-4 rounded-md bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 p-4">
+            <div className="flex items-start gap-2">
+              <AlertCircle size={16} className="text-red-600 dark:text-red-400 mt-0.5 shrink-0" />
+              <p className="text-sm text-red-700 dark:text-red-400">{error}</p>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 interface CanvasRowProps {
   name: string;
   provider: string;
@@ -193,6 +348,8 @@ export function Sandboxes({ organizationId }: SandboxesProps) {
 
   return (
     <div className="space-y-4 pt-6">
+      <CloudflareDeploySection organizationId={organizationId} />
+
       {statusLoading
         ? PROVIDERS.map((p) => <ProviderCardSkeleton key={p.key} />)
         : PROVIDERS.map((p) => (

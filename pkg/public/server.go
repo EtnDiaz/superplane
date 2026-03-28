@@ -6,8 +6,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"mime/multipart"
 	"net/http"
 	"net/http/httputil"
+	"net/textproto"
 	"net/url"
 	"os"
 	"strconv"
@@ -284,8 +286,8 @@ func (s *Server) RegisterGRPCGateway(grpcServerAddr string) error {
 	s.Router.PathPrefix("/api/v1/agents").Handler(protectedGRPCHandler)
 	s.Router.PathPrefix("/api/v1/workflows").Handler(protectedGRPCHandler)
 
-	orgAuthMiddleware(http.HandlerFunc(s.sandboxStatus))
 	s.Router.Handle("/api/v1/sandbox/status", orgAuthMiddleware(http.HandlerFunc(s.sandboxStatus))).Methods("GET")
+	s.Router.Handle("/api/v1/sandbox/cloudflare/deploy", orgAuthMiddleware(http.HandlerFunc(s.sandboxCloudflareDeploy))).Methods("POST")
 
 	return nil
 }
@@ -1227,4 +1229,165 @@ func (s *Server) sandboxStatus(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(resp)
+}
+
+type cfDeployRequest struct {
+	AccountID string `json:"accountId"`
+	APIToken  string `json:"apiToken"`
+	AuthToken string `json:"authToken"`
+}
+
+type cfDeployResponse struct {
+	WorkerURL string `json:"workerUrl"`
+	ScriptName string `json:"scriptName"`
+}
+
+const cfScriptName = "superplane-sandbox-bridge"
+
+const bridgeWorkerScript = `
+import { createWorker } from "@cloudflare/worker-bundler";
+export default {
+  async fetch(request, env) {
+    if (request.method === "GET" && new URL(request.url).pathname === "/health") {
+      return new Response("ok", { status: 200 });
+    }
+    if (request.method === "GET" && new URL(request.url).pathname === "/status") {
+      return Response.json({ available: true, provider: "cloudflare-dynamic-workers" });
+    }
+    if (request.method !== "POST" || new URL(request.url).pathname !== "/execute") {
+      return new Response("not found", { status: 404 });
+    }
+    const authHeader = request.headers.get("Authorization");
+    if (!authHeader || authHeader !== "Bearer " + env.AUTH_TOKEN) {
+      return new Response("unauthorized", { status: 401 });
+    }
+    let body;
+    try { body = await request.json(); } catch { return new Response("invalid JSON body", { status: 400 }); }
+    if (!body.code) return new Response("code is required", { status: 400 });
+    const inputJSON = JSON.stringify(body.input || {});
+    const wrappedCode = "const SUPERPLANE_INPUT = " + inputJSON + ";\n" + body.code;
+    const logs = [];
+    const start = Date.now();
+    try {
+      const { mainModule, modules } = await createWorker({ files: { "worker.js": wrappedCode }, bundle: true, minify: false });
+      const workerId = (await crypto.subtle.digest("SHA-256", new TextEncoder().encode(body.code))).toString().slice(0, 16);
+      const worker = env.LOADER.get(workerId, async () => ({ mainModule, modules }));
+      const resp = await worker.getEntrypoint().fetch(new Request("https://sandbox.internal/run", { method: "POST", headers: { "Content-Type": "application/json" }, body: inputJSON }));
+      const durationMs = Date.now() - start;
+      const text = await resp.text();
+      let output = {};
+      try { output = JSON.parse(text); } catch { output = { raw: text }; }
+      return Response.json({ output, logs, exitCode: resp.ok ? 0 : 1, durationMs, error: resp.ok ? undefined : text });
+    } catch (e) {
+      return Response.json({ output: {}, logs, exitCode: 1, durationMs: Date.now() - start, error: e.message }, { status: 500 });
+    }
+  }
+};
+`
+
+func (s *Server) sandboxCloudflareDeploy(w http.ResponseWriter, r *http.Request) {
+	var req cfDeployRequest
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		http.Error(w, "invalid request body: "+err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	if req.AccountID == "" || req.APIToken == "" || req.AuthToken == "" {
+		http.Error(w, "accountId, apiToken, and authToken are required", http.StatusBadRequest)
+		return
+	}
+
+	workerURL, err := deployCFWorker(r.Context(), req.AccountID, req.APIToken, req.AuthToken)
+	if err != nil {
+		http.Error(w, "deploy failed: "+err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	resp := cfDeployResponse{
+		WorkerURL:  workerURL,
+		ScriptName: cfScriptName,
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(resp)
+}
+
+func deployCFWorker(ctx context.Context, accountID, apiToken, authToken string) (string, error) {
+	metadata := fmt.Sprintf(`{
+		"main_module": "worker.js",
+		"compatibility_date": "2025-01-01",
+		"compatibility_flags": ["nodejs_compat"],
+		"bindings": [
+			{"type": "worker_loaders", "name": "LOADER"},
+			{"type": "plain_text", "name": "AUTH_TOKEN", "text": %q}
+		]
+	}`, authToken)
+
+	body := &bytes.Buffer{}
+	writer := multipart.NewWriter(body)
+
+	metaPart, err := writer.CreatePart(textproto.MIMEHeader{
+		"Content-Disposition": []string{`form-data; name="metadata"`},
+		"Content-Type":        []string{"application/json"},
+	})
+	if err != nil {
+		return "", fmt.Errorf("create metadata part: %w", err)
+	}
+	if _, err := metaPart.Write([]byte(metadata)); err != nil {
+		return "", fmt.Errorf("write metadata: %w", err)
+	}
+
+	scriptPart, err := writer.CreatePart(textproto.MIMEHeader{
+		"Content-Disposition": []string{`form-data; name="worker.js"; filename="worker.js"`},
+		"Content-Type":        []string{"application/javascript+module"},
+	})
+	if err != nil {
+		return "", fmt.Errorf("create script part: %w", err)
+	}
+	if _, err := scriptPart.Write([]byte(bridgeWorkerScript)); err != nil {
+		return "", fmt.Errorf("write script: %w", err)
+	}
+
+	writer.Close()
+
+	url := fmt.Sprintf("https://api.cloudflare.com/client/v4/accounts/%s/workers/scripts/%s", accountID, cfScriptName)
+	httpReq, err := http.NewRequestWithContext(ctx, http.MethodPut, url, body)
+	if err != nil {
+		return "", fmt.Errorf("build request: %w", err)
+	}
+	httpReq.Header.Set("Content-Type", writer.FormDataContentType())
+	httpReq.Header.Set("Authorization", "Bearer "+apiToken)
+
+	resp, err := http.DefaultClient.Do(httpReq)
+	if err != nil {
+		return "", fmt.Errorf("cloudflare API request failed: %w", err)
+	}
+	defer resp.Body.Close()
+
+	respBody, _ := io.ReadAll(resp.Body)
+	if resp.StatusCode != http.StatusOK {
+		return "", fmt.Errorf("cloudflare API returned %d: %s", resp.StatusCode, string(respBody))
+	}
+
+	var cfResp struct {
+		Success bool `json:"success"`
+		Result  struct {
+			ID string `json:"id"`
+		} `json:"result"`
+		Errors []struct {
+			Message string `json:"message"`
+		} `json:"errors"`
+	}
+	if err := json.Unmarshal(respBody, &cfResp); err != nil {
+		return "", fmt.Errorf("parse response: %w", err)
+	}
+	if !cfResp.Success {
+		if len(cfResp.Errors) > 0 {
+			return "", fmt.Errorf("cloudflare API error: %s", cfResp.Errors[0].Message)
+		}
+		return "", fmt.Errorf("cloudflare API returned unsuccessful response")
+	}
+
+	workerURL := fmt.Sprintf("https://%s.workers.dev", cfScriptName)
+	return workerURL, nil
 }

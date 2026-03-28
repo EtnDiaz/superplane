@@ -389,6 +389,8 @@ message UpdateCanvasRequest {
   optional bool versioning_enabled = 4;
   optional CanvasChangeRequestApprovalConfig change_request_approval_config = 5;
   optional string sandbox_provider = 6;
+  optional string sandbox_cf_bridge_url = 7;
+  optional string sandbox_cf_auth_token = 8;
 }
 
 message UpdateCanvasResponse {
@@ -553,6 +555,8 @@ message Canvas {
     bool versioning_enabled = 9;
     CanvasChangeRequestApprovalConfig change_request_approval_config = 10;
     string sandbox_provider = 11;
+    string sandbox_cf_bridge_url = 12;
+    string sandbox_cf_auth_token = 13;
   }
 
   message Spec {
