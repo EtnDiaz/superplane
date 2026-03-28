@@ -56,6 +56,11 @@ import {
   eventStateRegistry as cloudflareEventStateRegistry,
 } from "./cloudflare/index";
 import {
+  componentMappers as sandboxComponentMappers,
+  triggerRenderers as sandboxTriggerRenderers,
+  eventStateRegistry as sandboxEventStateRegistry,
+} from "./sandbox/index";
+import {
   componentMappers as datadogComponentMappers,
   triggerRenderers as datadogTriggerRenderers,
   eventStateRegistry as datadogEventStateRegistry,
@@ -271,6 +276,7 @@ const componentBaseMappers: Record<string, ComponentBaseMapper> = {
 };
 
 const appMappers: Record<string, Record<string, ComponentBaseMapper>> = {
+  sandbox: sandboxComponentMappers,
   cloudflare: cloudflareComponentMappers,
   digitalocean: digitaloceanComponentMappers,
   semaphore: semaphoreComponentMappers,
@@ -315,6 +321,7 @@ const appMappers: Record<string, Record<string, ComponentBaseMapper>> = {
 };
 
 const appTriggerRenderers: Record<string, Record<string, TriggerRenderer>> = {
+  sandbox: sandboxTriggerRenderers,
   cloudflare: cloudflareTriggerRenderers,
   digitalocean: digitaloceanTriggerRenderers,
   semaphore: semaphoreTriggerRenderers,
@@ -359,6 +366,7 @@ const appTriggerRenderers: Record<string, Record<string, TriggerRenderer>> = {
 };
 
 const appEventStateRegistries: Record<string, Record<string, EventStateRegistry>> = {
+  sandbox: sandboxEventStateRegistry,
   cloudflare: cloudflareEventStateRegistry,
   digitalocean: digitaloceanEventStateRegistry,
   semaphore: semaphoreEventStateRegistry,

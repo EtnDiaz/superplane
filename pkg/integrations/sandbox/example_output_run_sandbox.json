@@ -1,0 +1,15 @@
+{
+  "data": {
+    "output": {
+      "result": "ok",
+      "count": 42,
+      "processed": true
+    },
+    "logs": [],
+    "exitCode": 0,
+    "durationMs": 312,
+    "provider": "gvisor"
+  },
+  "timestamp": "2026-03-28T12:00:00Z",
+  "type": "sandbox.result"
+}

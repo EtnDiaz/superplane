@@ -73,6 +73,7 @@ import (
 	_ "github.com/superplanehq/superplane/pkg/integrations/prometheus"
 	_ "github.com/superplanehq/superplane/pkg/integrations/render"
 	_ "github.com/superplanehq/superplane/pkg/integrations/rootly"
+	_ "github.com/superplanehq/superplane/pkg/integrations/sandbox"
 	_ "github.com/superplanehq/superplane/pkg/integrations/semaphore"
 	_ "github.com/superplanehq/superplane/pkg/integrations/sendgrid"
 	_ "github.com/superplanehq/superplane/pkg/integrations/sentry"
