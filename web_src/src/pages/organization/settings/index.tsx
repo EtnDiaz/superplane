@@ -12,6 +12,7 @@ import { useAccount } from "../../../contexts/AccountContext";
 import { useParams } from "react-router-dom";
 import { Members } from "./Members";
 import { Integrations } from "./Integrations";
+import { Sandboxes } from "./Sandboxes";
 import { IntegrationDetails } from "./IntegrationDetails";
 import { Secrets } from "./Secrets";
 import { SecretDetail } from "./SecretDetail";
@@ -33,6 +34,7 @@ import {
   Plug,
   Settings,
   Shield,
+  Terminal,
   User as UserIcon,
   Users,
 } from "lucide-react";
@@ -104,6 +106,7 @@ export function OrganizationSettings() {
     "members",
     "groups",
     "roles",
+    "sandboxes",
     "integrations",
     "secrets",
     "service-accounts",
@@ -169,6 +172,13 @@ export function OrganizationSettings() {
       href: `/${organizationId}/settings/roles`,
       Icon: Shield,
       permission: { resource: "roles", action: "read" },
+    },
+    {
+      id: "sandboxes",
+      label: "Sandboxes",
+      href: `/${organizationId}/settings/sandboxes`,
+      Icon: Terminal,
+      permission: { resource: "org", action: "read" },
     },
     {
       id: "integrations",
@@ -249,6 +259,10 @@ export function OrganizationSettings() {
     roles: {
       title: "Roles",
       description: "Define fine-grained access by creating and assigning roles.",
+    },
+    sandboxes: {
+      title: "Sandboxes",
+      description: "Configure sandbox providers for executing code in isolated environments.",
     },
     integrations: {
       title: "Integrations",
@@ -474,6 +488,14 @@ export function OrganizationSettings() {
               element={
                 <RequirePermission resource="roles" action="read">
                   <Roles organizationId={organizationId || ""} />
+                </RequirePermission>
+              }
+            />
+            <Route
+              path="sandboxes"
+              element={
+                <RequirePermission resource="org" action="read">
+                  <Sandboxes organizationId={organizationId || ""} />
                 </RequirePermission>
               }
             />
